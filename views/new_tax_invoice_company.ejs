@@ -1,0 +1,21 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+</head>
+<body>
+  <form action="/tax_invoice_issuers" id="issuerRegistrationForm" method="post" class="jobRegistration">
+    <input type="text" name="invoice_type" placeholder="세금계산서타입" class="jobRegistrationInput" required>
+    <input type="text" name="company_name" placeholder="업체 이름" class="jobRegistrationInput" autofocus required>
+    <input type="text" name="item_name" placeholder="품의명" class="jobRegistrationInput" autofocus required>
+    <input type="text" name="print_number" placeholder="출력순서" class="jobRegistrationInput" required>
+    <input type="text" name="sent_by" placeholder="발송업체" class="jobRegistrationInput" required>
+
+    <input type="text" name="best_match" placeholder="메일 발송 문구" class="jobRegistrationInput" required>
+    <input type="text" name="total_price" placeholder="금액" class="jobRegistrationInput" required>
+
+    <input type="submit"  class="jobRegistrationButton" value="등록">
+  </form>
+
+
+</body>
+</html>

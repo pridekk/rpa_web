@@ -1,0 +1,69 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+
+</head>
+<!doctype html>
+<script>
+
+</script>
+<body>
+  <% include ./nav.ejs %>
+  <div class="container col s12">
+  <table class="col s12">
+    <thead>
+      <th>출력번호</th>
+      <th>발행처</th>
+      <th>회사명</th>
+      <th>품목</th>
+      <th>총금액</th>
+      <th>수신회사</th>
+      <th>수신품목</th>
+      <th>월</th>
+      <th>일</th>
+      <th>금액</th>
+      <th>세액</th>
+      <th>총금액</th>
+      <th>차액</th>
+      <th>pdf</th>
+      <th colspan=2></th>
+    </thead>
+    <tbody>
+    <% for(var i = 0, len = data.length; i < len; i++) { item = data[i]; %>
+    <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
+
+      <td><%=item.print_number%></td>
+      <td><%=item.sent_by%></td>
+      <td><%=item.company_name%></td>
+      <td><%=item.item_name%></td>
+      <td><%=item.total_price%></td>
+      <td><%=item.invoice_company_name%></td>
+      <td><%=item.invoice_item_name%></td>
+      <td><%=item.invoice_month%></td>
+      <td><%=item.invoice_day%></td>
+      <td><%=item.invoice_price%></td>
+      <td><%=item.invoice_tax%></td>
+      <td><%=item.invoice_total_price%></td>
+      <td><%=item.diff_price%></td>
+      <td>
+
+        <% if( item.filepath && item.filepath !== "") {%>
+         <a class="Popup" href="/pdf/<%=item.filepath.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
+        <% } %>
+       </td>
+       <td>
+         <a  href="/tax_invoice/<%=item.invoice_id%>"><i class="material-icons">edit</i></a>
+       </td>
+       <td>
+
+         <a class="delete" href="/tax_invoices/delete/<%=item.invoice_id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</i></a>
+       </td>
+    </tr>
+    <% } %>
+  </tbody>
+  </table>
+</div>
+
+  <% include ./footer.ejs %>
+</body>
+</html>

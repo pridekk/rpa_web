@@ -1,0 +1,15 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+</head>
+<body>
+  <form action="/tax_invoice_issuers" id="issuerRegistrationForm" method="post" class="jobRegistration">
+    <input type="text" name="name" placeholder="발행기관 이름" class="jobRegistrationInput" autofocus required>
+    <input type="text" name="subject" placeholder="메일 제목 포함 문구" class="jobRegistrationInput" required>
+    <input type="text" name="body" placeholder="메일 본문 포함 문구" class="jobRegistrationInput" required>
+    <input type="submit"  class="jobRegistrationButton" value="등록">
+  </form>
+
+
+</body>
+</html>

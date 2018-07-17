@@ -1,0 +1,87 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+
+</head>
+<!doctype html>
+<script>
+
+</script>
+<body>
+  <% include ./nav.ejs %>
+  <div class="container">
+
+  <a class="right" href="/tax_invoice_companies/new"> <i class="medium material-icons">add_box</i></a>
+  <div class="row">
+   <div class="col s12">
+     <ul class="tabs">
+       <li class="tab col s3"><a class="active" href="#maintenance">유지보수</a></li>
+       <li class="tab col s3"><a  href="#fee">정보이용료</a></li>
+     </ul>
+   </div>
+   <div id="maintenance" class="col s12">
+     <table>
+       <thead>
+         <th>계산서종류</th>
+         <th>업체명</th>
+         <th>품의명</th>
+         <th>출력순서</th>
+         <th>발행업체</th>
+         <th>금액</th>
+         <th></td>
+       </thead>
+       <tbody>
+       <% for(var i = 0, len = maintenance.length; i < len; i++) { item = maintenance[i]; %>
+       <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
+         <td><%=item.invoice_type%></td>
+         <td><%=item.company_name%></td>
+         <td><%=item.item_name%></td>
+         <td><%=item.print_number%></td>
+         <td><%=item.sent_by%></td>
+         <td><%=item.total_price%></td>
+          <td>
+            <a class="delete" href="/tax_invoice_companies/delete/<%=item.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</a>
+          </td>
+       </tr>
+       <% } %>
+     </table>
+   </div>
+       <div id="fee" class="col s12">
+         <table>
+           <thead>
+             <th>계산서종류</th>
+             <th>업체명</th>
+             <th>품의명</th>
+             <th>출력순서</th>
+             <th>발행업체</th>
+             <th>금액</th>
+             <th></td>
+           </thead>
+           <tbody>
+           <% for(var i = 0, len = fee.length; i < len; i++) { item = fee[i]; %>
+           <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
+             <td><%=item.invoice_type%></td>
+             <td><%=item.company_name%></td>
+             <td><%=item.item_name%></td>
+             <td><%=item.print_number%></td>
+             <td><%=item.sent_by%></td>
+             <td><%=item.total_price%></td>
+              <td>
+                <a class="delete" href="/tax_invoice_companies/delete/<%=item.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</a>
+              </td>
+           </tr>
+           <% } %>
+     </table>
+   </div>
+
+ </div>
+
+</div>
+  <% include ./footer.ejs %>
+  <script>
+    $(document).ready(() => {
+      $('.tabs').tabs();
+    })
+  </script>
+</body>
+</html>

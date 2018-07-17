@@ -1,0 +1,55 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script
+    src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+    crossorigin="anonymous"></script>
+</head>
+<!doctype html>
+
+<body>
+
+
+  <% include ./nav.ejs %>
+
+  <div class="container">
+    <h3> 세금계산서 발행 기관 </h3>
+
+    <% if ( expressFlash.length > 0 ) { %>
+     <h5 class="left green lighter-2 message white-text"> <%= expressFlash %></h5>
+    <% } %>
+    <a class="right" href="/tax_invoice_issuers/new"><i class="medium material-icons">add_box</i></a>
+    <table class="example">
+      <thead>
+        <th>발행기관</th>
+        <th>메일 제목 포함문구</th>
+        <th>메일 본문 포함문구</th>
+        <th></td>
+      </thead>
+      <tbody>
+      <% for(var i = 0, len = data.length; i < len; i++) { item = data[i]; %>
+      <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
+        <td><%=item.issuer_name%></td>
+        <td><%=item.mail_subject%></td>
+        <td><%=item.mail_body%></td>
+         <td>
+           <a  href="/tax_invoice_issuer/<%=item.id%>"><i class="material-icons">edit</i></a>
+           <a class="delete" href="/tax_invoice_issuer/delete/<%=item.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</i></a>
+         </td>
+      </tr>
+      <% } %>
+    </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+  $(function() {
+    $('tbody').sortable();
+   $( "tbody" ).disableSelection();
+    $("h5.message").fadeOut(3000);
+ })
+</script>
+  <% include ./footer.ejs %>
+</body>
+</html>

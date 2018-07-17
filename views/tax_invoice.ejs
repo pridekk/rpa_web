@@ -1,0 +1,135 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+
+</head>
+<body>
+  <% include ./nav.ejs %>
+  <div class="container">
+    <h3> 세금계산서 연결 수정</h3>
+  <form action="/tax_invoice/<%=data.id%>?_method=PUT"  method="post">
+
+    <label for="company_name">업체명</label><input type="text" name="company_name" placeholder="업체명"  disabled value="<%=data.company%>"required>
+    <label for="company_name">품의명</label><input type="text" name="item_name" placeholder="품목"  disabled value="<%=data.item_name%>" required>
+    <label for="company_name">발행월</label><input type="text" name="month" placeholder="월"  disabled value="<%=data.month%>" required>
+    <label for="company_name">발행일</label><input type="text" name="day" placeholder="일"   disabled value="<%=data.day%>"required>
+    <label for="company_name">금액</label><input type="text" name="price" placeholder="가격"  disabled value="<%=data.price%>" required>
+    <label for="company_name">세금</label><input type="text" name="tax" placeholder="세금"  disabled value="<%=data.tax%>" required>
+    <label for="company_name">총합계</label><input type="text" name="total_price" placeholder="총금액"  disabled  value="<%=data.total_price%>"required>
+    <label for="company_name">매칭된 품의</label><input type="text" disabled value='<%=tax_invoice_company.invoice_type + " " +tax_invoice_company.company_name +" "+ tax_invoice_company.item_name%>'>
+            <!-- <div class="input-field col s12">
+              <input type="text" name="tax_invoice_company_id" id="autocomplete-input" class="autocomplete">
+              <label for="autocomplete-input">연결업체명</label>
+            </div> -->
+
+  <div class="input-field col s2">
+      <select name="input-1" id="input-1">
+        <option value="" disabled selected>Choose your option</option>
+      </select>
+      <label>분류선택</label>
+       <input type="hidden" name="invoice_type" id="invoice_type" />
+  </div>
+  <div class="input-field col s2">
+      <select id="input-2">
+        <option value="" disabled selected>Choose your option</option>
+      </select>
+      <label>회사선택</label>
+      <input type="hidden" name="invoice_company_name" id="invoice_company_name" />
+  </div>
+  <div class="input-field col s2">
+      <select id="input-3">
+        <option value="" disabled selected>Choose your option</option>
+      </select>
+      <label>품의선택</label>
+      <input type="hidden" name="invoice_item_name" id="invoice_item_name" />
+  </div>
+  <div class="input-field col s12">
+  <input type="submit"  class="jobRegistrationButton" value="수정">
+  <div>
+  </form>
+</div>
+
+<% include ./footer.ejs %>
+
+</body>
+<script>
+$(document).ready(function(){
+
+    $('input.autocomplete').autocomplete({
+      data: {
+        "Apple": 'https://placehold.it/250x250',
+        "Microsoft": 'https://placehold.it/250x250',
+        "Google": 'https://placehold.it/250x250',
+        "1":'https://placehold.it/250x250'
+      },
+    });
+    <% for(var i = 0, len =  invoice_type.length; i<len ;i++){%>
+      $("#input-1").append($('<option>', { value: <%=i%>, text: "<%=invoice_type[i].invoice_type%>"}))
+    <% } %>
+    $("#input-1").formSelect();
+
+
+    $("#input-1").change( function() {
+      var str = "";
+      $('#invoice_type').val($("#input-1 option:selected").text());
+      $("#input-1 option:selected").each(function(){
+        str += $(this).text();
+      });
+      $.ajax({
+        type:'GET',
+        url: "/apis/company_names?invoice_type="+str,
+        data: null,
+        success: function(data){
+          $("#input-2").empty();
+          $("#input-3").empty();
+          $("#input-3").append("<option value='' disabled selected>Choose your option</option>")
+          $("#input-2").append("<option value='' disabled selected>Choose your option</option>")
+          $.each(data, function(idx,item){
+
+            $("#input-2").append($('<option>', { value: idx, text: item["company_name"]}));
+          })
+
+          $("#input-2").formSelect();
+        }
+      })
+
+    })
+
+    $("#input-2").change( function() {
+      console.log("test")
+      var str1 = ""
+      var str2 = ""
+      $('#invoice_company_name').val($("#input-2 option:selected").text());
+      $("#input-1 option:selected").each(function(){
+        str1 += $(this).text();
+      });
+      $("#input-2 option:selected").each(function(){
+        str2 += $(this).text();
+      });
+      $.ajax({
+        type:'GET',
+        url: "/apis/company_names?invoice_type="+str1+"&company_name="+str2,
+        data: null,
+        success: function(data){
+          $("#input-3").empty();
+          $("#input-3").append("<option value='' disabled selected>Choose your option</option>")
+          $.each(data, function(idx,item){
+
+            $("#input-3").append($('<option>', { value: idx, text: item["item_name"]}));
+          })
+
+          $("#input-3").formSelect();
+        }
+      })
+
+    })
+    $("#input-3").change( function() {
+        $('#invoice_item_name').val($("#input-3 option:selected").text());
+
+
+    })
+
+  })
+    // $("#input-1").
+</script>
+</html>

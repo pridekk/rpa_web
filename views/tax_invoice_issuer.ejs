@@ -1,0 +1,17 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+
+</head>
+<body>
+  <form action="/tax_invoice_issuer/<%=data.id%>?_method=PUT" id="issuerRegistrationForm" method="post" class="jobRegistration">
+
+    <input type="text" name="name" placeholder="발행기관 이름" class="jobRegistrationInput" autofocus value="<%=data.issuer_name%>"required>
+    <input type="text" name="subject" placeholder="메일 제목 포함 문구" class="jobRegistrationInput" value="<%=data.mail_subject%>" required>
+    <input type="text" name="body" placeholder="메일 본문 포함 문구" class="jobRegistrationInput" value="<%=data.mail_body%>" required>
+    <input type="submit"  class="jobRegistrationButton" value="수정">
+  </form>
+
+
+</body>
+</html>

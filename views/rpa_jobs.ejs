@@ -1,0 +1,25 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+</head>
+<body>
+  <table>
+    <tr>
+      <th>RPA명</th>
+      <th>작성자</th>
+      <th>사용자</th>
+      <th>사용부서</th>
+      <th>비고</th>
+    </tr>
+    <% data.forEach( (item) => { %>
+    <tr>
+      <td><%=item.name%></td>
+      <td><%=item.creator%></td>
+      <td><%=item.username%></td>
+      <td><%=item.department%></td>
+      <td><%=item.comment%></td>
+    </tr>
+    <% }) %>
+  </table>
+</body>
+</html>

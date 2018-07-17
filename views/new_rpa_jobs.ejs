@@ -1,0 +1,17 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+</head>
+<body>
+  <form action="/rpa_jobs" id="jobRegistrationForm" method="post" class="jobRegistration">
+    <input type="text" name="name" placeholder="RPA 이름" class="jobRegistrationInput" autofocus required>
+    <input type="text" name="creator" placeholder="RPA 작성자" class="jobRegistrationInput" required>
+    <input type="text" name="username" placeholder="RPA 사용자" class="jobRegistrationInput" required>
+    <input type="text" name="department" placeholder="RPA 사용부서" class="jobRegistrationInput" required>
+    <input type="text" name="comment" placeholder="비고 " class="jobRegistrationInput" required>
+    <input type="submit" placeholder="RPA " class="jobRegistrationButton" value="등록">
+  </form>
+
+
+</body>
+</html>
