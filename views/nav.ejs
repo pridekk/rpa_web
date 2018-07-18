@@ -1,14 +1,38 @@
 
 
 <nav>
-    <div class="nav-wrapper">
+    <div class="nav-wrapper blue lighten-1">
       <a href="#" class="brand-logo"> <i class="medium material-icons">work</i><%= title %></a>
+      <a href="#" data-target="subnav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="/tax_invoice_issuers">발행기관</a></li>
         <li><a href="/tax_invoice_companies">업체</a></li>
         <li><a href="/tax_invoices?invoice_type=maintenance">유지보수정리</a></li>
         <li><a href="/tax_invoices?invoice_type=fee">이용료정리</a></li>
         <li><a href="/tax_invoices">수신함</a></li>
+        <li><a href="/maintain_reports">유지보수확인서</a></li>
       </ul>
     </div>
+
+    <ul class="sidenav" id="subnav">
+      <li><a href="/tax_invoice_issuers">발행기관</a></li>
+      <li><a href="/tax_invoice_companies">업체</a></li>
+      <li><a href="/tax_invoices?invoice_type=maintenance">유지보수정리</a></li>
+      <li><a href="/tax_invoices?invoice_type=fee">이용료정리</a></li>
+      <li><a href="/tax_invoices">수신함</a></li>
+      <li><a href="/maintain_reports">유지보수확인서</a></li>
+    </ul>
 </nav>
+<div container>
+<% if ( typeof expressFlash !== "undefined" && expressFlash.length > 0 ) { %>
+ <h5 class="green lighter-2 message white-text"> <%= expressFlash %></h5>
+<% } %>
+</div>
+
+
+<script type="text/javascript">
+
+  $(() =>  {
+    $("h5.message").fadeOut(3000);
+ })
+</script>

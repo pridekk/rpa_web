@@ -4,14 +4,32 @@
 
 </head>
 <body>
-  <form action="/tax_invoice_issuer/<%=data.id%>?_method=PUT" id="issuerRegistrationForm" method="post" class="jobRegistration">
+  <% include ./nav.ejs %>
 
-    <input type="text" name="name" placeholder="발행기관 이름" class="jobRegistrationInput" autofocus value="<%=data.issuer_name%>"required>
-    <input type="text" name="subject" placeholder="메일 제목 포함 문구" class="jobRegistrationInput" value="<%=data.mail_subject%>" required>
-    <input type="text" name="body" placeholder="메일 본문 포함 문구" class="jobRegistrationInput" value="<%=data.mail_body%>" required>
-    <input type="submit"  class="jobRegistrationButton" value="수정">
+  <form action="/tax_invoice_issuer/<%=data.id%>?_method=PUT"  method="post">
+    <div class="container">
+      <h4>발행기관 등록</h4>
+      <form action="/tax_invoice_issuers"  method="post" >
+        <div class="row">
+          <label>발행기관(SITE)</label>
+          <input type="text" name="name" placeholder="발행기관 이름"  autofocus value="<%=data.issuer_name%>"required>
+        </div>
+        <div class="row">
+          <label>제목에 포함되는 문구</label>
+          <input type="text" name="subject" placeholder="메일 제목 포함 문구"  value="<%=data.mail_subject%>" required>
+        </div>
+        <div class="row">
+          <label>본문에 포함되는 문구</label>
+          <input type="text" name="body" placeholder="메일 본문 포함 문구"  value="<%=data.mail_body%>" required>
+        </div>
+        <div class="row">
+          <input class="btn" type="submit"   value="수정">
+        </div>
+      </form>
+    </div>
   </form>
 
 
+  <% include ./footer.ejs %>
 </body>
 </html>

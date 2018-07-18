@@ -8,6 +8,8 @@
 
 </script>
 <body>
+  <% include ./nav.ejs %>
+  <div class="container col s12">
   <table>
     <tr>
       <th>수신회사</th>
@@ -21,7 +23,7 @@
       <th>총금액</th>
       <th>수신횟수</th>
       <th>계산서보기</th>
-      <th></td>
+      <th colspan="2"></td>
     </tr>
     <% data.forEach( (item) => { %>
     <tr>
@@ -30,8 +32,7 @@
 
       <td><%=item.item_name%></td>
       <td><%=item.mgmt_id%></td>
-      <td><%=item.total_price%></td>
-
+      
       <td><%=item.month%></td>
       <td><%=item.day%></td>
       <td><%=item.price%></td>
@@ -39,15 +40,16 @@
       <td><%=item.total_price%></td>
       <td><%=item.mail_count%></td>
       <td>
-        <% if( item.filepath && item.filepath !== "") {%>
-         <a class="Popup" href="/pdf/<%=item.filepath.split('\\').pop()%>"  target="_blank">계산서</a>
+        <% if( item.invoice_filename && item.invoice_filename !== "") {%>
+         <a class="Popup" href="/pdf/<%=item.invoice_filename.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
         <% } %>
        </td>
        <td>
-         <a class="delete" href="/tax_invoices/delete/<%=item.invoice_id%>"  data-method="delete"  rel="nofollow">삭제</a>
+         <a class="delete" href="/tax_invoices/delete/<%=item.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</i></a>
        </td>
     </tr>
     <% }) %>
   </table>
+</div>
 </body>
 </html>

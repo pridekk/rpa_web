@@ -3,19 +3,77 @@
   <% include ./header.ejs %>
 </head>
 <body>
-  <form action="/tax_invoice_issuers" id="issuerRegistrationForm" method="post" class="jobRegistration">
-    <input type="text" name="invoice_type" placeholder="세금계산서타입" class="jobRegistrationInput" required>
-    <input type="text" name="company_name" placeholder="업체 이름" class="jobRegistrationInput" autofocus required>
-    <input type="text" name="item_name" placeholder="품의명" class="jobRegistrationInput" autofocus required>
-    <input type="text" name="print_number" placeholder="출력순서" class="jobRegistrationInput" required>
-    <input type="text" name="sent_by" placeholder="발송업체" class="jobRegistrationInput" required>
+  <% include ./nav.ejs %>
+  <div class="container">
+    <h4>업체 품의 등록</h4>
+    <% if(!company) {
+      var company = {company_name:""} %>
+      <form action="/tax_invoice_companies"  enctype="multipart/form-data" method="post" >
+    <% } else { %>
+      <form action="/tax_invoice_company/<%=company.id%>"  enctype="multipart/form-data" method="post" >
+    <% } %>
+        <div class="row">
+          <label>세금계산서처리타입</label>
+          <div class="input-field">
+            <select name="invoice_type" required>
+              <% if (company.invoice_type === "maintenance") { %>
+                <option value="maintenance"selected >유지보수</option>
+                <option value="fee" >정보이용료</option>
+              <% } else { %>
+                <option value="maintenance">유지보수</option>
+                <option value="fee" selected  >정보이용료</option>
+              <% } %>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <label>업체이름</label>
+          <input type="text" name="company_name" placeholder="업체 이름"  value="<%=company.company_name%>" required>
+        </div>
+        <div class="row">
+          <label>품의명</label>
+          <input type="text" name="item_name" placeholder="품의명" value="<%=company.item_name%>" required>
+        </div>
+        <div class="row">
+          <label>출력순서</label>
+          <input type="text" name="print_number" placeholder="출력순서"  value="<%=company.print_number%>" required>
+        </div>
+        <div class="row">
+          <label>계산서발송SITE</label>
+          <input type="text" name="sent_by" placeholder="발송업체"  value="<%=company.sent_by%>" required>
+        </div>
+        <div class="row">
+          <label>발송내역문구</label>
+          <input type="text" name="best_match" placeholder="품의내용 발송 문구" value="<%=company.best_match%>" >
+        </div>
+        <div class="row">
+          <label>총금액(부가세포함)</label>
+          <input type="text" name="total_price" placeholder="금액" value="<%=company.total_price%>"  required>
+        </div>
+        <div class = "row">
+          <label>품의서첨부</label>
+          <div class = "file-field input-field">
+            <div class = "btn">
+            <span>검색</span>
+            <input name="userfile" type = "file"  value="<%=company.report_filename%>" />
+            </div>
 
-    <input type="text" name="best_match" placeholder="메일 발송 문구" class="jobRegistrationInput" required>
-    <input type="text" name="total_price" placeholder="금액" class="jobRegistrationInput" required>
+            <div class = "file-path-wrapper">
+            <input class = "file-path validate" type = "text"
+             placeholder = "Upload file" value="<%=company.report_filename%>"/>
+            </div>
+          </div>
+        </div>
 
-    <input type="submit"  class="jobRegistrationButton" value="등록">
-  </form>
+        <input class="right waves-effect waves-light btn" type="submit"  value="등록">
+      </form>
+  </div>
 
-
+  <% include ./footer.ejs %>
+  <script>
+    $(document).ready(function(){
+      $('select').formSelect();
+    });
+  </script>
 </body>
 </html>

@@ -4,70 +4,145 @@
 
 </head>
 <!doctype html>
-<script>
+<style>
+#li_fee,#li_maintenance {
+  font-size: 150%;
 
-</script>
+}
+</style>
 <body>
   <% include ./nav.ejs %>
   <div class="container">
 
   <a class="right" href="/tax_invoice_companies/new"> <i class="medium material-icons">add_box</i></a>
+  <a class="right" href="#" id="save_order"><i class="medium material-icons">save</i></a>
   <div class="row">
    <div class="col s12">
      <ul class="tabs">
-       <li class="tab col s3"><a class="active" href="#maintenance">유지보수</a></li>
-       <li class="tab col s3"><a  href="#fee">정보이용료</a></li>
+       <li class="tab col s3"><a id="li_maintenance"  href="#maintenance">유지보수</a></li>
+       <li class="tab col s3"><a id="li_fee" href="#fee">정보이용료</a></li>
      </ul>
    </div>
+
    <div id="maintenance" class="col s12">
-     <table>
+     <table id="maintenance_table">
        <thead>
+         <th>ID</th>
          <th>계산서종류</th>
          <th>업체명</th>
          <th>품의명</th>
          <th>출력순서</th>
          <th>발행업체</th>
          <th>금액</th>
-         <th></td>
+         <th>품의서</th>
+         <th colspan="2"></td>
        </thead>
        <tbody>
        <% for(var i = 0, len = maintenance.length; i < len; i++) { item = maintenance[i]; %>
        <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
+         <td class="maintenance_id"><%=item.id%></td>
          <td><%=item.invoice_type%></td>
          <td><%=item.company_name%></td>
          <td><%=item.item_name%></td>
          <td><%=item.print_number%></td>
          <td><%=item.sent_by%></td>
          <td><%=item.total_price%></td>
-          <td>
-            <a class="delete" href="/tax_invoice_companies/delete/<%=item.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</a>
-          </td>
+         <td><% if(item.report_filename) {%>
+              <a class="waves-effect waves-light " href=/uploads/<%=item.report_filename%>><i class="material-icons" target="_blank">picture_as_pdf</i></a>
+          <% } else {%>
+            <a class="waves-effect waves-light  modal-trigger" href="#file_modal_<%=item.id%>"><i class="material-icons">file_upload</i></a>
+            <div id="file_modal_<%=item.id%>" class="modal">
+              <div class="modal-content">
+                <form action="/apis/fileupload?type=company&id=<%=item.id%>" enctype="multipart/form-data" method="post">
+                  <div class = "row">
+                     <label>품의서첨부</label>
+                     <div class = "file-field input-field">
+                        <div class = "btn">
+                           <span>검색</span>
+                           <input name="userfile" type = "file" />
+                        </div>
+
+                        <div class = "file-path-wrapper">
+                           <input class = "file-path validate" type = "text"
+                              placeholder = "Upload file"/>
+                        </div>
+                     </div>
+                  </div>
+                </div>
+              <div class="modal-footer">
+                <input type="submit"  class="btn" value="등록">
+              </div>
+              </form>
+            </div>
+          <% } %>
+         </td>
+         <td>
+           <a href="/tax_invoice_company/<%=item.id%>" ><i class="material-icons">edit</i></a>
+         </td>
+         <td>
+            <a class="delete" href="/tax_invoice_companies/delete/<%=item.id%>"  data-method="delete" onclick="return confirm('정말지우시겠습니까?');" rel="nofollow"><i class="material-icons">delete</a>
+         </td>
        </tr>
        <% } %>
      </table>
    </div>
        <div id="fee" class="col s12">
-         <table>
+         <table id="fee_table">
            <thead>
+             <th>ID</th>
              <th>계산서종류</th>
              <th>업체명</th>
              <th>품의명</th>
              <th>출력순서</th>
              <th>발행업체</th>
              <th>금액</th>
-             <th></td>
+             <th>품의서</th>
+             <th colspan="2"></td>
            </thead>
            <tbody>
            <% for(var i = 0, len = fee.length; i < len; i++) { item = fee[i]; %>
            <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
+             <td class="fee_id"><%=item.id%></td>
              <td><%=item.invoice_type%></td>
              <td><%=item.company_name%></td>
              <td><%=item.item_name%></td>
              <td><%=item.print_number%></td>
              <td><%=item.sent_by%></td>
              <td><%=item.total_price%></td>
+             <td><% if(item.report_filename) {%>
+                  <a class="waves-effect waves-light " href=/uploads/<%=item.report_filename%>><i class="material-icons" target="_blank">picture_as_pdf</i></a>
+              <% } else {%>
+                <a class="waves-effect waves-light  modal-trigger" href="#file_modal_<%=item.id%>"><i class="material-icons">file_upload</i></a>
+                <div id="file_modal_<%=item.id%>" class="modal">
+                  <div class="modal-content">
+                    <form action="/apis/fileupload?type=company&id=<%=item.id%>" enctype="multipart/form-data" method="post">
+                      <div class = "row">
+                         <label>품의서첨부</label>
+                         <div class = "file-field input-field">
+                            <div class = "btn">
+                               <span>검색</span>
+                               <input name="userfile" type = "file" />
+                            </div>
+
+                            <div class = "file-path-wrapper">
+                               <input class = "file-path validate" type = "text"
+                                  placeholder = "Upload file"/>
+                            </div>
+                         </div>
+                      </div>
+                    </div>
+                  <div class="modal-footer">
+                    <input type="submit"  class="btn" value="등록">
+                  </div>
+                  </form>
+                </div>
+              <% } %>
+             </td>
+             <td>
+               <a href="/tax_invoice_company/<%=item.id%>" ><i class="material-icons">edit</i></a>
+             </td>
               <td>
-                <a class="delete" href="/tax_invoice_companies/delete/<%=item.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</a>
+                <a class="delete" href="/tax_invoice_companies/delete/<%=item.id%>"  data-method="delete" onclick="return confirm('정말지우시겠습니까?');"  rel="nofollow"><i class="material-icons">delete</a>
               </td>
            </tr>
            <% } %>
@@ -79,9 +154,60 @@
 </div>
   <% include ./footer.ejs %>
   <script>
-    $(document).ready(() => {
+
+    $(() => {
+      function getSearchParams(k){
+       var p={};
+       location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+       return k?p[k]:p;
+      }
       $('.tabs').tabs();
+
+      let invoice_type = getSearchParams['invoice_type']
+      console.log(invoice_type)
+      if(invoice_type){
+        $(invoice_type).addClass("active")
+      }else{
+        $('li_maintenance').addClass("active")
+      }
+      $('tbody').sortable();
+      $('tbody').disableSelection();
+      $("#save_order").click((e) => {
+        e.preventDefault();
+        let orders = {}
+        orders["maintenance"] = [];
+        orders["fee"] = [];
+        $('.maintenance_id').each((idx, value) => {
+          orders["maintenance"].push($(value).text())
+        })
+        $('.fee_id').each((idx, value) => {
+          orders["fee"].push($(value).text())
+        })
+        let active_id = $(".active").attr("id")
+        console.log(orders)
+
+        $.ajax({
+          type:'post',
+          url: "/apis/update_company_orders",
+          data: orders,
+          success: function(data){
+             console.log("success")
+
+             var url = new URL(location.href);
+            url.searchParams.set('invoce_type',active_id);
+            location.href = url.href;
+            console.log(location)
+             // location.reload();
+
+          }
+        })
+      })
+      $('.modal').modal();
+
+
     })
+
+
   </script>
 </body>
 </html>

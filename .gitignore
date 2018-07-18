@@ -1,2 +1,5 @@
 /public/pdf
+/public/uploads
 /node_modules
+/public/maintain_reports
+/mail

@@ -9,6 +9,19 @@ var db = pgp("postgres://rpa:rpa2018.@localhost/rpa");
 var db2 = pgp("postgres://general_affairs:chdanqn00&@localhost/general_affairs")
 var session = require('express-session')
 var flash = require('express-flash')
+var multer = require('multer')
+var storage = multer.diskStorage({
+  destination: (req,file,cb) => {
+    cb(null, 'public/uploads/')
+  },
+  filename: (req,file,cb) => {
+    console.log(file)
+    f_name = `${Date.now()}${Math.floor(Math.random()*10000)}.${file.mimetype.split('/')[1]}`
+    console.log(f_name)
+    cb(null, f_name )
+  }
+})
+var upload = multer({storage:storage})
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -31,5 +44,6 @@ var rpa_jobs = require('./router/rpa_jobs')(app, fs, db);
 var tax_invoices = require('./router/tax_invoices')(app,fs, db2);
 var string_similarity = require('./router/string_similarity')(app,fs, db2);
 var tax_invoice_issuers = require('./router/tax_invoice_issuers')(app, fs, db2);
-var tax_invoice_companies = require('./router/tax_invoice_companies')(app, fs, db2);
-var apis = require('./router/apis')(app, fs, db2);
+var tax_invoice_companies = require('./router/tax_invoice_companies')(app, fs, db2, upload);
+var apis = require('./router/apis')(app, fs, db2,upload);
+var maintain_reports = require('./router/maintain_reports')(app, fs, db2);
