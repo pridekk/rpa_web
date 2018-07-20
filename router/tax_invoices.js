@@ -10,7 +10,7 @@ module.exports = function(app, fs, db){
        ti.company as invoice_company_name, ti.item_name as invoice_item_name, ti.month as invoice_month, \
        ti.day as invoice_day, ti.price as invoice_price, ti.tax as invoice_tax, ti.total_price as invoice_total_price, (tc.total_price - ti.total_price) as diff_price , \
        ti.invoice_filename as filepath, ti.id as invoice_id \
-       from tax_invoice_companies as tc left outer join tax_invoices as ti on tc.id = ti.tax_invoice_company_id \
+       from items as tc left outer join tax_invoices as ti on tc.id = ti.tax_invoice_company_id \
        where tc.invoice_type = '${invoice_type}' order by print_number`)
       .then((data) => {
 
@@ -55,9 +55,9 @@ module.exports = function(app, fs, db){
      db.oneOrNone('select * from tax_invoices where id = ' + invoice_id)
      .then((data) => {
        console.log(data)
-       db.oneOrNone(`select * from tax_invoice_companies where id = ${data.tax_invoice_company_id}`)
+       db.oneOrNone(`select * from items where id = ${data.tax_invoice_company_id}`)
        .then((data2) =>{
-         db.manyOrNone('select distinct invoice_type from tax_invoice_companies')
+         db.manyOrNone('select distinct invoice_type from items')
          .then((data3) => {
            autos = {}
            // for(var i = 0, len = data2.length; i < len; i++){
@@ -84,7 +84,7 @@ module.exports = function(app, fs, db){
     invoice_id  = req.params.id
     console.log(req.body)
     tax_invoice_company = req.body
-    let query_string = `select id from tax_invoice_companies where invoice_type = '${tax_invoice_company.invoice_type}'  and company_name = '${tax_invoice_company.invoice_company_name}' and item_name =
+    let query_string = `select id from items where invoice_type = '${tax_invoice_company.invoice_type}'  and company_name = '${tax_invoice_company.invoice_company_name}' and item_name =
       '${tax_invoice_company.invoice_item_name}'`
     console.log(query_string)
     db.oneOrNone(query_string)

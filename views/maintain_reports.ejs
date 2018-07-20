@@ -3,15 +3,57 @@
   <% include ./header.ejs %>
 
 </head>
-<!doctype html>
 <script>
 
 </script>
 <body>
   <% include ./nav.ejs %>
+
+
   <div class="container col s12">
+      <div class="row">
+        <form action="/maintain_reports" method="get">
+          <div class="input-field col s4 l2">
+            <select name="year">
+              <% for(var i =2018 ;i<2022;i++) { %>
+                <% if(typeof year !== "undefined" && parseInt(year) === i) { %>
+                  <option value="<%=i%>" selected><%=i%>월</option>
+                <% } else { %>
+                  <option value="<%=i%>"><%=i%>월</option>
+                <% } %>
+              <% } %>
+            </select>
+            <label>년</label>
+          </div>
+          <div class="input-field col s4 l2">
+            <select name="month">
+              <% for(var i =1 ;i<12;i++) { %>
+                <% if(typeof month !== "undefined" && parseInt(month) === i) { %>
+                  <option value="<%=i%>" selected><%=i%>월</option>
+                <% } else { %>
+                  <option value="<%=i%>"><%=i%>월</option>
+                <% } %>
+              <% } %>
+            </select>
+            <label>월</label>
+          </div>
+          <div class="input-field col s2 l2">
+            <label>
+            <input type="checkbox" name="displaymode" checked="checked" />
+            <span class="blue-text text-darken-2">미분류보기</span>
+          </label>
+          </div>
+          <div class="input-field col s2 l2">
+            <input class="btn" type="submit" value="제출">
+          </div>
+
+        </form>
+      </div>
   <table>
     <tr>
+      <th>출력번호</th>
+      <th>회사명</th>
+      <th>품목</th>
       <th>발신자</th>
       <th>제목</th>
       <th>수신일</th>
@@ -20,6 +62,9 @@
     </tr>
     <% data.forEach( (item) => { %>
     <tr>
+      <td><%=item.print_number%></td>
+      <td><%=item.company_name%></td>
+      <td><%=item.item_name%></td>
 
       <td><%=item.sender%></td>
       <td><%=item.subject%></td>
@@ -31,11 +76,21 @@
         <% } %>
        </td>
        <td>
+         <a  href="/maintain_report/<%=item.id%>"><i class="material-icons">edit</i></a>
+       </td>
+       <td>
          <a class="delete" href="/maintain_reports/delete/<%=item.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</i></a>
        </td>
     </tr>
     <% }) %>
   </table>
+
 </div>
+<% include ./footer.ejs %>
+<script>
+  $(document).ready(function(){
+     $('select').formSelect();
+   });
+</script>
 </body>
 </html>

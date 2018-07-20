@@ -2,7 +2,7 @@
 module.exports = function(app, fs, db, upload){
 
   app.get('/tax_invoice_companies', (req,res) => {
-    db.manyOrNone("Select * from tax_invoice_companies order by invoice_type, print_number")
+    db.manyOrNone("Select * from items order by invoice_type, print_number")
     .then((data) => {
       maintenance = []
       fee = []
@@ -29,7 +29,7 @@ module.exports = function(app, fs, db, upload){
   app.get('/tax_invoice_companies/delete/:id', (req,res) => {
      console.log(req.params.id)
      invoice_id = req.params.id
-     db.none('delete from tax_invoice_companies where id = ' + invoice_id)
+     db.none('delete from items where id = ' + invoice_id)
      .then(() => {
        res.redirect('back')
      })
@@ -39,7 +39,7 @@ module.exports = function(app, fs, db, upload){
   app.get('/tax_invoice_company/:id', (req,res) => {
      console.log(req.params.id)
      invoice_id = req.params.id
-     db.oneOrNone('select * from tax_invoice_companies where id = ' + invoice_id)
+     db.oneOrNone('select * from items where id = ' + invoice_id)
      .then((data) => {
        res.render('new_tax_invoice_company', {title: '업체 등록', company: data})
      }).catch( (err) => {
@@ -57,11 +57,11 @@ module.exports = function(app, fs, db, upload){
     let company_id = req.params.id
     console.log(company);
     if(req.file){
-      query_string = `update tax_invoice_companies set company_name = '${company.company_name}',item_name='${company.item_name}',
+      query_string = `update items set company_name = '${company.company_name}',item_name='${company.item_name}',
       sent_by='${company.sent_by}', best_match='${company.best_match}',total_price= ${company.total_price}, report_filename='${req.file.filename}'  where id = ${company_id}`;
       //console.log(query_string);
     }else{
-      query_string = `update tax_invoice_companies set company_name = '${company.company_name}',item_name='${company.item_name}',
+      query_string = `update items set company_name = '${company.company_name}',item_name='${company.item_name}',
       sent_by='${company.sent_by}', best_match='${company.best_match}',total_price= ${company.total_price}  where id = ${company_id}`;
     }
 
@@ -81,11 +81,11 @@ module.exports = function(app, fs, db, upload){
 
       console.log(company);
       if(req.file){
-        query_string = `Insert into tax_invoice_companies (invoice_type, print_number, company_name, item_name, sent_by, best_match, total_price, report_filename ) Values (
+        query_string = `insert into items (invoice_type, print_number, company_name, item_name, sent_by, best_match, total_price, report_filename ) Values (
            '${company.invoice_type}',${company.print_number},'${company.company_name}','${company.item_name}','${company.sent_by}', '${company.best_match}', ${company.total_price}, '${req.file.filename}')`;
         //console.log(query_string);
       }else{
-        query_string = `Insert into tax_invoice_companies (invoice_type, print_number, company_name, item_name, sent_by, best_match, total_price ) Values (
+        query_string = `insert into items (invoice_type, print_number, company_name, item_name, sent_by, best_match, total_price ) Values (
            '${company.invoice_type}',${company.print_number},'${company.company_name}','${company.item_name}','${company.sent_by}', '${company.best_match}', ${company.total_price})`;
       }
       db.none(query_string).then( () => {

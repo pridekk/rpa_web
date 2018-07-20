@@ -7,7 +7,7 @@ module.exports = function(app, fs, db,upload){
     console.log(invoice_type)
     console.log(company_name)
     if(company_name){
-      db.manyOrNone(`Select distinct item_name from tax_invoice_companies where invoice_type = '${invoice_type}' and company_name = '${company_name}'`)
+      db.manyOrNone(`Select distinct item_name from items where invoice_type = '${invoice_type}' and company_name = '${company_name}'`)
       .then((data) => {
         res.send(data);
         res.end()
@@ -16,7 +16,7 @@ module.exports = function(app, fs, db,upload){
         console.log("Error: ", err);
       });
     }else{
-      db.manyOrNone(`Select distinct company_name from tax_invoice_companies where invoice_type = '${invoice_type}'`)
+      db.manyOrNone(`Select distinct company_name from items where invoice_type = '${invoice_type}'`)
       .then((data) => {
         res.send(data);
         res.end()
@@ -34,14 +34,14 @@ module.exports = function(app, fs, db,upload){
     console.log(req.body)
 
     for(var i =0,len = orders["maintenance"].length; i < len;i++){
-        db.none(`update tax_invoice_companies set print_number = ${i+1} where id =${orders["maintenance"][i]}`)
+        db.none(`update items set print_number = ${i+1} where id =${orders["maintenance"][i]}`)
         .then(() =>{
         }).catch( (err) => {
           console.log("Error: ", err);
         });
     }
     for(var i =0,len = orders["fee"].length; i < len;i++){
-        db.none(`update tax_invoice_companies set print_number = ${i+1} where id =${orders["fee"][i]}`)
+        db.none(`update items set print_number = ${i+1} where id =${orders["fee"][i]}`)
         .then(() =>{
         }).catch( (err) => {
           console.log("Error: ", err);
@@ -52,7 +52,7 @@ module.exports = function(app, fs, db,upload){
 
     // console.log(company_name)
     // if(company_name){
-    //   db.manyOrNone(`Select distinct item_name from tax_invoice_companies where invoice_type = '${invoice_type}' and company_name = '${company_name}'`)
+    //   db.manyOrNone(`Select distinct item_name from items where invoice_type = '${invoice_type}' and company_name = '${company_name}'`)
     //   .then((data) => {
     //     res.send(data);
     //     res.end()
@@ -61,7 +61,7 @@ module.exports = function(app, fs, db,upload){
     //     console.log("Error: ", err);
     //   });
     // }else{
-    //   db.manyOrNone(`Select distinct company_name from tax_invoice_companies where invoice_type = '${invoice_type}'`)
+    //   db.manyOrNone(`Select distinct company_name from items where invoice_type = '${invoice_type}'`)
     //   .then((data) => {
     //     res.send(data);
     //     res.end()
@@ -77,7 +77,7 @@ module.exports = function(app, fs, db,upload){
     console.log(req.file)
 
 
-        db.none(`update tax_invoice_companies set report_filename = '${req.file.filename}' where id =${id}`)
+        db.none(`update items set report_filename = '${req.file.filename}' where id =${id}`)
         .then(() =>{
           req.flash('success', '파일업로드성공.')
           res.redirect('/tax_invoice_companies')
