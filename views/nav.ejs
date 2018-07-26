@@ -1,26 +1,49 @@
+<style>
 
-
+</style>
 <nav>
-    <div class="nav-wrapper blue lighten-1">
+    <div id="nav-top" class="nav-wrapper blue lighten-1">
       <a href="#" class="brand-logo"> <i class="medium material-icons">work</i><%= title %></a>
       <a href="#" data-target="subnav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="/tax_invoice_issuers">발행기관</a></li>
-        <li><a href="/tax_invoice_companies">업체</a></li>
-        <li><a href="/tax_invoices?invoice_type=maintenance">유지보수정리</a></li>
-        <li><a href="/tax_invoices?invoice_type=fee">이용료정리</a></li>
-        <li><a href="/tax_invoices">수신함</a></li>
-        <li><a href="/maintain_reports">유지보수확인서</a></li>
+        <li><a class="dropdown-trigger" href="#!" data-target="company_dropdown"><i class="material-icons left">business</i> 업체<i class="material-icons right">arrow_drop_down</i></a></li>
+        <li><a class="dropdown-trigger" href="#!" data-target="mail_dropdown"><i class="material-icons left">email</i> 수신함<i class="material-icons right">arrow_drop_down</i></a></li>
+        <li><a class="dropdown-trigger" href="#!" data-target="report_dropdown"><i class="material-icons left">folder</i> 월별정리함<i class="material-icons right">arrow_drop_down</i></a></li>
       </ul>
     </div>
 
     <ul class="sidenav" id="subnav">
-      <li><a href="/tax_invoice_issuers">발행기관</a></li>
-      <li><a href="/tax_invoice_companies">업체</a></li>
-      <li><a href="/tax_invoices?invoice_type=maintenance">유지보수정리</a></li>
-      <li><a href="/tax_invoices?invoice_type=fee">이용료정리</a></li>
-      <li><a href="/tax_invoices">수신함</a></li>
+      <li><a href="/tax_invoice_issuers">발행SITE</a></li>
+      <li><a href="/companies">업체</a></li>
+      <li><a href="/items">품의</a></li>
+      <li><a href="/tax_invoices">세금계산서</a></li>
       <li><a href="/maintain_reports">유지보수확인서</a></li>
+      <li><a href="/monthly_reports?invoice_type=maintenance">유지보수정리</a></li>
+      <li><a href="/monthly_reports?invoice_type=fee">이용료정리</a></li>
+    </ul>
+
+    <ul id="company_dropdown" class="dropdown-content">
+      <li class="white-text blue lighten-1"><i class="material-icons left">business</i></li>
+      <li><a href="/tax_invoice_issuers">발행SITE</a></li>
+      <li class="divider"></li>
+      <li><a href="/companies">업체</a></li>
+      <li class="divider"></li>
+      <li><a href="/items">품의</a></li>
+    </ul>
+    <ul id="mail_dropdown" class="dropdown-content">
+      <li class="white-text blue lighten-1"><i class="material-icons left">email</i></li>
+      <li><a href="/tax_invoices">세금계산서</a></li>
+      <li><a href="/maintain_reports">유지보수확인서</a></li>
+      <li class="divider"></li>
+      <li>Archive</li>
+      <li><a href="/tax_invoices/all">세금계산서</a></li></li>
+      <li><a href="/tax_invoices/all">세금계산서</a></li></li>
+
+    </ul>
+    <ul id="report_dropdown" class="dropdown-content">
+      <li class="white-text blue lighten-1"><i class="material-icons left">folder</i></li>
+      <li><a href="/monthly_reports?invoice_type=maintenance">유지보수정리</a></li>
+      <li><a href="/monthly_reports?invoice_type=fee">이용료정리</a></li>
     </ul>
 </nav>
 <div container>
@@ -31,8 +54,8 @@
 
 
 <script type="text/javascript">
-
   $(() =>  {
     $("h5.message").fadeOut(3000);
+     $(".dropdown-trigger").dropdown();
  })
 </script>

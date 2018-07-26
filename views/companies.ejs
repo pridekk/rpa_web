@@ -1,0 +1,87 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script
+    src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+    crossorigin="anonymous"></script>
+</head>
+<!doctype html>
+
+<body>
+
+
+  <% include ./nav.ejs %>
+
+  <div class="container">
+
+
+
+
+    <div class="row">
+      <div class="col">
+        <h4 class="card-title">업체</h4>
+        <p>품의서 등록을 위한 업체를 등록하는 곳</p>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="container col s12 l9">
+
+        <form action="/companies" method="get">
+          <div class="input-field col s8 l4">
+            <input type="text" name="search" >
+            <label>검색</label>
+          </div>
+          <div class="input-field col s4 l2">
+            <input class="btn" type="submit" value="제출">
+          </div>
+
+        </form>
+      </div>
+      <div class="col right">
+        <a class="btn float" href="/companies/new">신규등록</a>
+      </div>
+    </div>
+
+
+    <table class="example">
+      <thead>
+        <th>업체명</th>
+        <th>영문</th>
+        <th>사업자번호</th>
+        <th>대표메일</th>
+        <th></th>
+        <th></th>
+      </thead>
+      <tbody>
+      <% for(var i = 0, len = companies.length; i < len; i++) {  %>
+      <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
+        <td class="issuer_name"><%=companies[i].company_name%></td>
+        <td><%=companies[i].company_name_alias%></td>
+        <td><%=companies[i].company_number%></td>
+        <td><%=companies[i].mail%></td>
+         <td>
+           <a  href="/company/<%=companies[i].id%>"><i class="material-icons">edit</i></a>
+         </td>
+         <td>
+           <a class="delete" href="/company/delete/<%=companies[i].id%>"  data-method="delete"  onclick="return confirm('정말지우시겠습니까?');"    rel="nofollow"><i class="material-icons">delete</i></a>
+         </td>
+      </tr>
+      <% } %>
+    </tbody>
+    </table>
+  </div>
+
+
+<script type="text/javascript">
+
+  $(() =>  {
+    $('tbody').sortable();
+    $( "tbody" ).disableSelection();
+ })
+</script>
+  <% include ./footer.ejs %>
+</body>
+</html>

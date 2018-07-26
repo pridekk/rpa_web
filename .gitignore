@@ -1,6 +1,11 @@
 /public/pdf
 /public/uploads
+/public/invoices
 /node_modules
 /public/maintain_reports
+/public/maintain_reports_for_ocr
+/public/ocr
+/logs
 /mail
 /public/ocr
+*.zip

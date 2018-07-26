@@ -1,0 +1,54 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+
+
+</head>
+<body>
+  <% include ./nav.ejs %>
+  <div class="container">
+    <h3> 업체 수정</h3>
+    <div class="row">
+    <div class="col s12 l6">
+      <form action="/company/<%=data.id%>?_method=PUT"  method="post">
+        <div class="row">
+          <div class="input-field col s12 l5">
+            <label for="company_name">업체명</label><input type="text" name="company_name" placeholder="업체명"   value="<%=data.company_name%>"required>
+          </div>
+          <div class="input-field col s12 l7">
+            <label for="company_number">사업자번호</label><input type="text" name="company_number" placeholder="사업자번로를 입력하세요"  value="<%=data.company_number%>" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 l10">
+            <label for="company_name">영문명</label><input type="text" name="company_name_alias" placeholder="영문상호를 입력하세요"   value="<%=data.company_name_alias%>">
+          </div>
+          <div class="input-field col s12 l10">
+            <label for="company_name">Mail</label><input type="text" name="mail" placeholder="대표메일"  value="<%=data.mail%>" >
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="input-field col s6 l2">
+            <input id="submit" class="right btn" type="submit"  value="수정">
+          </div>
+          <div class="input-field col s6 l2">
+            <a class="btn right" href="/company/delete/<%=data.id%>"  data-method="delete"  rel="nofollow" onclick="return confirm('정말지우시겠습니까?');">삭제</a>
+          </div>
+          <div class="input-field col s6 l2">
+            <a class="btn right" href="#" onclick="javascript:history.go(-1)">Back</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+</div>
+
+<% include ./footer.ejs %>
+
+</body>
+<script>
+    // $("#input-1").
+</script>
+</html>

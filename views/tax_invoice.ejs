@@ -2,51 +2,143 @@
 <head>
   <% include ./header.ejs %>
 
+
 </head>
 <body>
   <% include ./nav.ejs %>
   <div class="container">
     <h3> 세금계산서 연결 수정</h3>
-  <form action="/tax_invoice/<%=data.id%>?_method=PUT"  method="post">
+    <div class="row">
+    <div class="col s12 l6">
+      <form action="/tax_invoice/<%=data.id%>?_method=PUT"  method="post">
+        <div class="row">
+          <div class="input-field col s12 l5">
+            <label for="company_name">업체명</label><input type="text" name="company_name" placeholder="업체명"  disabled value="<%=data.company%>"required>
+          </div>
+          <div class="input-field col s12 l7">
+            <% if (tax_invoice_company) { %>
+              <label for="company_number">사업자번호</label><input type="text" name="company_number" placeholder="품목"  disabled value="<%=companies_map[tax_invoice_company.company_id].company_number%>" required>
+            <% } else { %>
+              <label for="company_number">사업자번호</label><input type="text" name="company_number" placeholder="사업자번호가 없습니다 업체정보를 갱신하세요"  disabled value="" required>
+            <% } %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 l10">
+            <label for="company_name">품의명</label><input type="text" name="item_name" placeholder="품목"  disabled value="<%=data.item_name%>" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s4 l2">
+            <select class="month_year" name="bill_year">
+              <% for(var i =2018 ;i<2025;i++) { %>
+                <% if(data.bill_year && parseInt(data.bill_year) === i) { %>
+                  <option value="<%=i%>" selected><%=i%>년</option>
+                <% } else { %>
+                  <option value="<%=i%>"><%=i%>년</option>
+                <% } %>
+              <% } %>
+            </select>
+            <label>년</label>
+          </div>
+          <div class="input-field col s4 l2">
+            <select class="month_year"  name="bill_month">
+              <% for(var i =1 ;i<13;i++) { %>
+                <% if(data.bill_month  && parseInt(data.bill_month) === i) { %>
+                  <option value="<%=i%>" selected><%=i%>월</option>
+                <% } else { %>
+                  <option value="<%=i%>"><%=i%>월</option>
+                <% } %>
+              <% } %>
+            </select>
+            <label>월</label>
+          </div>
+          <div class="input-field col s12 l3">
+            <label for="company_name">발행월</label><input type="text" name="month" placeholder="월"  disabled value="<%=data.month%>" required>
+          </div>
+          <div class="input-field col s12 l3">
+            <label for="company_name">발행일</label><input type="text" name="day" placeholder="일"   disabled value="<%=data.day%>"required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 l4">
+            <label for="company_name">금액</label><input type="text" name="price" placeholder="가격"  value="<%=data.price%>" required>
+          </div>
+          <div class="input-field col s12 l4">
+            <label for="company_name">세금</label><input type="text" name="tax" placeholder="세금"  value="<%=data.tax%>" required>
+          </div>
+          <div class="input-field col s12 l4">
+            <label for="company_name">총합계</label><input type="text" name="total_price" placeholder="총금액"    value="<%=data.total_price%>"required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 l12">
+            <label for="company_name">매칭된 품의</label>
+            <% if(tax_invoice_company) { %>
+              <input type="text" disabled value='<%=tax_invoice_company.invoice_type + " " +tax_invoice_company.company_name +" "+ tax_invoice_company.item_name%>'>
+              <input type="text" disabled value='총합계:<%=tax_invoice_company.total_price%>'>
+            <% } else { %>
+              <input type="text" disabled value=''>
+            <% } %>
 
-    <label for="company_name">업체명</label><input type="text" name="company_name" placeholder="업체명"  disabled value="<%=data.company%>"required>
-    <label for="company_name">품의명</label><input type="text" name="item_name" placeholder="품목"  disabled value="<%=data.item_name%>" required>
-    <label for="company_name">발행월</label><input type="text" name="month" placeholder="월"  disabled value="<%=data.month%>" required>
-    <label for="company_name">발행일</label><input type="text" name="day" placeholder="일"   disabled value="<%=data.day%>"required>
-    <label for="company_name">금액</label><input type="text" name="price" placeholder="가격"  disabled value="<%=data.price%>" required>
-    <label for="company_name">세금</label><input type="text" name="tax" placeholder="세금"  disabled value="<%=data.tax%>" required>
-    <label for="company_name">총합계</label><input type="text" name="total_price" placeholder="총금액"  disabled  value="<%=data.total_price%>"required>
-    <label for="company_name">매칭된 품의</label><input type="text" disabled value='<%=tax_invoice_company.invoice_type + " " +tax_invoice_company.company_name +" "+ tax_invoice_company.item_name%>'>
-            <!-- <div class="input-field col s12">
-              <input type="text" name="tax_invoice_company_id" id="autocomplete-input" class="autocomplete">
-              <label for="autocomplete-input">연결업체명</label>
-            </div> -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s4">
+              <select name="input-1" id="input-1">
+                <option value="" disabled selected>Choose your option</option>
+              </select>
+              <label>분류선택</label>
+               <input type="hidden" name="invoice_type" id="invoice_type" />
+          </div>
+          <div class="input-field col s4">
+              <select id="input-2">
+                <option value="" disabled selected>Choose your option</option>
+              </select>
+              <label>회사선택</label>
+              <input type="hidden" name="invoice_company_name" id="invoice_company_name" />
+          </div>
+          <div class="input-field col s4">
+              <select id="input-3">
+                <option value="" disabled selected>Choose your option</option>
+              </select>
+              <label>품의선택</label>
+              <input type="hidden" name="invoice_item_name" id="invoice_item_name" />
+          </div>
 
-  <div class="input-field col s2">
-      <select name="input-1" id="input-1">
-        <option value="" disabled selected>Choose your option</option>
-      </select>
-      <label>분류선택</label>
-       <input type="hidden" name="invoice_type" id="invoice_type" />
-  </div>
-  <div class="input-field col s2">
-      <select id="input-2">
-        <option value="" disabled selected>Choose your option</option>
-      </select>
-      <label>회사선택</label>
-      <input type="hidden" name="invoice_company_name" id="invoice_company_name" />
-  </div>
-  <div class="input-field col s2">
-      <select id="input-3">
-        <option value="" disabled selected>Choose your option</option>
-      </select>
-      <label>품의선택</label>
-      <input type="hidden" name="invoice_item_name" id="invoice_item_name" />
-  </div>
-  <div class="input-field col s12">
-  <input type="submit"  class="jobRegistrationButton" value="수정">
-  <div>
-  </form>
+        </div>
+        <div class="row">
+          <div class="input-field col s6 l3">
+            <label>
+              <% if(data.confirmed){ %>
+                <input type="checkbox" name="confirmed" checked="checked" />
+              <% } else { %>
+                <input type="checkbox" name="confirmed" />
+              <% } %>
+              <span class="blue-text text-darken-2">확정</span>
+            </label>
+          </div>
+          <div class="input-field col s6 l2">
+            <input id="submit" class="right btn" type="submit"  value="수정">
+          </div>
+          <div class="input-field col s6 l2">
+            <a class="btn right" href="/tax_invoices/delete/<%=data.id%>"  data-method="delete"  rel="nofollow" onclick="return confirm('정말지우시겠습니까?');">삭제</a>
+          </div>
+          <div class="input-field col s6 l2">
+            <a class="btn right" href="/tax_invoices/back" >목록</a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col s12 l6">
+      <% if(data.filepath.split('.').pop() === "pdf") { %>
+          <embed src="/invoices/<%=data.filepath.split('\\').pop()%>" type="application/pdf" width="100%" height="600px" view="Fit" />
+      <% } else { %>
+        <img src="/invoices/<%=data.filepath.split('\\').pop()%>" width="100%" />
+      <% } %>
+
+    </div>
+
 </div>
 
 <% include ./footer.ejs %>
@@ -67,7 +159,7 @@ $(document).ready(function(){
       $("#input-1").append($('<option>', { value: <%=i%>, text: "<%=invoice_type[i].invoice_type%>"}))
     <% } %>
     $("#input-1").formSelect();
-
+    $(".month_year").formSelect();
 
     $("#input-1").change( function() {
       var str = "";

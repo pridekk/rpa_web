@@ -1,0 +1,44 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+</head>
+<body>
+  <% include ./nav.ejs%>
+  <div class="container">
+    <h4>업체 등록</h4>
+    <form action="/companies"  method="post" >
+
+          <div class="row">
+            <div class="input-field col s12 l3">
+              <label>업체명</label>
+              <input type="text" name="company_name" placeholder="업체 상호명"  autofocus required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 l6">
+              <label>영문명</label>
+              <input type="text" name="company_name_alias" placeholder="업체 영문명" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 l6">
+              <label>사업자번호</label>
+              <input type="text" name="company_number" placeholder="사업자번호를 입력하세요 "   required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 l6">
+              <label>메일</label>
+              <input type="text" name="mail" placeholder="대표메일주소를 입력하세요 "   required>
+            </div>
+          </div>
+          <div class="row">
+            <input class="btn" type="submit"   value="등록">
+          </div>
+
+    </form>
+  </div>
+
+  <% include ./footer.ejs %>
+</body>
+</html>

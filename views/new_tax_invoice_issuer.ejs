@@ -7,21 +7,29 @@
   <div class="container">
     <h4>발행기관 등록</h4>
     <form action="/tax_invoice_issuers"  method="post" >
-      <div class="row">
-        <label>발행기관(SITE)</label>
-        <input type="text" name="name" placeholder="발행기관 이름"  autofocus required>
-      </div>
-      <div class="row">
-        <label>제목에 포함되는 문구</label>
-        <input type="text" name="subject" placeholder="메일 제목 포함 문구"  required>
-      </div>
-      <div class="row">
-        <label>본문에 포함되는 문구</label>
-        <input type="text" name="body" placeholder="메일 본문 포함 문구"  required>
-      </div>
-      <div class="row">
-        <input class="btn" type="submit"   value="등록">
-      </div>
+
+          <div class="row">
+            <div class="input-field col s12 l3">
+              <label>발행기관(SITE)</label>
+              <input type="text" name="name" placeholder="발행기관 이름"  autofocus required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 l6">
+              <label>제목에 포함되는 문구</label>
+              <input type="text" name="subject" placeholder="메일 제목 포함 문구를 입력하세요 예: 세금계산서"   required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 l6">
+              <label>본문에 포함되는 문구</label>
+              <input type="text" name="body" placeholder="메일 본문 포함 문구를 입력하세요 (대부분 site url 입력 예: my-bill.co.kr) "   required>
+            </div>
+          </div>
+          <div class="row">
+            <input class="btn" type="submit"   value="등록">
+          </div>
+
     </form>
   </div>
 

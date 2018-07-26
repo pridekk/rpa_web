@@ -10,6 +10,28 @@
 <body>
   <% include ./nav.ejs %>
   <div class="container col s12">
+    <div class="row">
+      <form action="/tax_invoices" method="get">
+        <div class="input-field col s12 l2">
+          <label>
+            <% if(is_archive){ %>
+              <input type="checkbox" name="is_archive" checked="checked" />
+            <% } else { %>
+              <input type="checkbox" name="is_archive" />
+            <% } %>
+            <span class="blue-text text-darken-2">확정포함검색</span>
+          </label>
+        </div>
+        <div class="input-field col s8 l4">
+          <input type="text" name="search" >
+          <label>검색</label>
+        </div>
+        <div class="input-field col s4 l2">
+          <input class="btn" type="submit" value="제출">
+        </div>
+
+      </form>
+    </div>
   <table>
     <tr>
       <th>수신회사</th>
@@ -27,12 +49,11 @@
     </tr>
     <% data.forEach( (item) => { %>
     <tr>
-
       <td><%=item.company%></td>
 
       <td><%=item.item_name%></td>
       <td><%=item.mgmt_id%></td>
-      
+
       <td><%=item.month%></td>
       <td><%=item.day%></td>
       <td><%=item.price%></td>
@@ -40,16 +61,24 @@
       <td><%=item.total_price%></td>
       <td><%=item.mail_count%></td>
       <td>
-        <% if( item.invoice_filename && item.invoice_filename !== "") {%>
-         <a class="Popup" href="/pdf/<%=item.invoice_filename.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
+        <% if( item.filepath && item.filepath !== "") {%>
+         <a class="Popup" href="/invoices/<%=item.filepath.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
         <% } %>
+         <a class="Popup" href="/tax_invoice/<%=item.id%>"  target="_blank"><i class="material-icons">edit</i></a>
        </td>
        <td>
-         <a class="delete" href="/tax_invoices/delete/<%=item.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</i></a>
+         <a class="delete" href="/tax_invoices/delete/<%=item.id%>"  data-method="delete"  onclick="return confirm('정말지우시겠습니까?');" rel="nofollow"><i class="material-icons">delete</i></a>
        </td>
     </tr>
     <% }) %>
   </table>
 </div>
+<% include ./footer.ejs %>
+<script>
+  $(document).ready(function(){
+     $('select').formSelect();
+   });
+</script>
 </body>
+
 </html>

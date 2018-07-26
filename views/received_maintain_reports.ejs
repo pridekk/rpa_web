@@ -1,0 +1,57 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+
+</head>
+<script>
+
+</script>
+<body>
+  <% include ./nav.ejs %>
+
+
+
+  <table>
+    <tr>
+      <th>회사명</th>
+      <th>품목</th>
+      <th>발신자</th>
+      <th>제목</th>
+      <th>년</th>
+      <th>월</th>
+      <th>수신일</th>
+      <th>보고서보기</th>
+      <th colspan="2"></td>
+    </tr>
+    <% data.forEach( (report) => { %>
+    <tr>
+      <td><%=report.company_name%></td>
+      <td><%=report.item_name%></td>
+      <td><%=report.sender%></td>
+      <td><%=report.subject%></td>
+      <td><%=report.year%></td>
+      <td><%=report.month%></td>
+      <td><%=report.received_at%></td>
+
+      <td>
+        <% if( report.filepath && report.filepath !== "") {%>
+         <a class="Popup" href="/maintain_reports/<%=report.filepath.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
+        <% } %>
+       </td>
+       <td>
+         <a  href="/maintain_report/<%=report.id%>"><i class="material-icons">edit</i></a>
+       </td>
+       <td>
+         <a class="delete" href="/maintain_reports/delete/<%=report.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</i></a>
+       </td>
+    </tr>
+    <% }) %>
+  </table>
+
+</div>
+<% include ./footer.ejs %>
+<script>
+
+</script>
+</body>
+</html>

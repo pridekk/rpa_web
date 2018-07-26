@@ -1,0 +1,105 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+
+
+</head>
+<body>
+  <% include ./nav.ejs %>
+  <div class="container">
+    <h3> 유지보수확인서 등록</h3>
+    <div class="row">
+    <div class="col s12 l6">
+      <form action="/maintain_reports" enctype="multipart/form-data" method="post">
+        <div class="row">
+          <div class="input-field col s12 l5">
+            <label for="company_name">업체명</label><input type="text" name="company_name" placeholder="업체명"   value="<%=data.company_name%>"required>
+            <input type="hidden" name="tax_invoice_company_id" placeholder="업체명"   value="<%=data.item_id%>"required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 l10">
+            <label for="company_name">품의명</label><input type="text" name="item_name" placeholder="품목"  value="<%=data.item_name%>" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s4 l2">
+            <select name="bill_year">
+              <% for(var i =2018 ;i<2025;i++) { %>
+                <% if(data.bill_year && parseInt(data.bill_year) === i) { %>
+                  <option value="<%=i%>" selected><%=i%>년</option>
+                <% } else { %>
+                  <option value="<%=i%>"><%=i%>년</option>
+                <% } %>
+              <% } %>
+            </select>
+            <label>확정년</label>
+          </div>
+          <div class="input-field col s4 l2">
+            <select name="bill_month">
+              <% for(var i =1 ;i<13;i++) { %>
+                <% if(data.bill_month  && parseInt(data.bill_month) === i) { %>
+                  <option value="<%=i%>" selected><%=i%>월</option>
+                <% } else { %>
+                  <option value="<%=i%>"><%=i%>월</option>
+                <% } %>
+              <% } %>
+            </select>
+            <label>확정월</label>
+          </div>
+
+
+        </div>
+        <div class="row">
+
+          <div class="col s12 l9">
+            <label>유지보수확인서첨부</label>
+            <div class = "file-field input-field">
+              <div class = "btn">
+              <span>검색</span>
+              <input name="userfile" type = "file"  />
+              </div>
+
+              <div class = "file-path-wrapper">
+              <input class = "file-path validate" type = "text" placeholder = "Upload file" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="input-field col s6 l3">
+            <label>
+              <% if(data.confirmed){ %>
+                <input type="checkbox" name="confirmed" checked="checked" />
+              <% } else { %>
+                <input type="checkbox" name="confirmed" />
+              <% } %>
+              <span class="blue-text text-darken-2">확정</span>
+            </label>
+          </div>
+          <div class="input-field col s6 l2">
+            <input id="submit" class="right btn" type="submit"  value="등록">
+          </div>
+          <div class="input-field col s6 l2">
+            <a class="btn right" href="#" onclick="javascript:history.go(-1)">취소</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+</div>
+
+<% include ./footer.ejs %>
+
+</body>
+<script>
+$(document).ready(function(){
+    $('select').formSelect();
+
+
+  })
+    // $("#input-1").
+</script>
+</html>

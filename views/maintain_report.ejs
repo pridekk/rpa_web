@@ -22,14 +22,31 @@
         </div>
 
         <div class="row">
-          <div class="input-field col s6 l2">
+          <div class="input-field col s4 l2">
+            <select name="bill_year">
+              <% for(var i =2018 ;i<2025;i++) { %>
+                <% if(data.year && parseInt(data.year) === i) { %>
+                  <option value="<%=i%>" selected><%=i%>년</option>
+                <% } else { %>
+                  <option value="<%=i%>"><%=i%>년</option>
+                <% } %>
+              <% } %>
+            </select>
             <label>년</label>
-            <input type="text" name="year" placeholder="년"  value="<%=data.year%>" required>
           </div>
-          <div class="input-field col s6 l2">
+          <div class="input-field col s4 l2">
+            <select name="bill_month">
+              <% for(var i =1 ;i<13;i++) { %>
+                <% if(data.month  && parseInt(data.month) === i) { %>
+                  <option value="<%=i%>" selected><%=i%>월</option>
+                <% } else { %>
+                  <option value="<%=i%>"><%=i%>월</option>
+                <% } %>
+              <% } %>
+            </select>
             <label>월</label>
-            <input type="text" name="month" placeholder="월"  value="<%=data.month%>" required>
           </div>
+
           <div class="input-field col s12 l8">
             <label>수신일</label>
             <input type="text" placeholder="수신일" value="<%=data.received_at%>" disabled>
@@ -46,7 +63,12 @@
         <div class="row">
           <div class="input-field col s12 ">
             <label >매칭된 품의</label>
-            <input type="text" disabled value='<%=maintain_report_company.invoice_type + " " +maintain_report_company.company_name +" "+ maintain_report_company.item_name%>'>
+            <% if(maintain_report_company) { %>
+              <input type="text" disabled value='<%=maintain_report_company.invoice_type + " " +maintain_report_company.company_name +" "+ maintain_report_company.item_name%>'>
+            <% } else { %>
+              <input type="text" disabled value='없음'>
+            <% }%>
+
           </div>
 
         </div>
@@ -72,21 +94,43 @@
         </div>
 
         <div class="row">
-          <input id="submit" class="right btn" type="submit"  value="등록">
+          <div class="input-field col s6 l6">
+            <label>
+              <% if(data.confirmed){ %>
+                <input type="checkbox" name="confirmed" checked="checked" />
+              <% } else { %>
+                <input type="checkbox" name="confirmed" />
+              <% } %>
+              <span class="blue-text text-darken-2">확정</span>
+            </label>
+          </div>
+          <div class="input-field col s6 l2">
+            <input id="submit" class="right btn" type="submit"  value="수정">
+          </div>
+          <div class="input-field col s6 l2">
+            <a class="btn right" href="/maintain_reports/delete/<%=data.id%>"  data-method="delete"  rel="nofollow" onclick="return confirm('정말지우시겠습니까?');">삭제</a>
+          </div>
+          <div class="input-field col s6 l2">
+            <a class="btn right" href="/maintain_reports/back">목록</a>
+          </div>
         </div>
       </form>
     </div>
     <div class="col s12 l6">
-      <embed src="/maintain_reports/<%=data.filepath.split('\\').pop()%>" type="application/pdf" width="100%" height="600px" view="Fit" />
+      <% if(data.filepath.split('.').pop() === "pdf") { %>
+          <embed src="/maintain_reports/<%=data.filepath.split('\\').pop()%>" type="application/pdf" width="100%" height="600px" view="Fit" />
+      <% } else { %>
+        <img src="/maintain_reports/<%=data.filepath.split('\\').pop()%>" width="100%" />
+      <% } %>
+
     </div>
-  </div>
   </div>
 
   <% include ./footer.ejs %>
   <script>
     $(document).ready(function(){
       $('select').formSelect();
-      $('#submit').prop('disabled', true)
+
       $("#input-2").change( function() {
         console.log("test")
         var str2 = ""
@@ -100,7 +144,7 @@
           url: "/apis/company_names?invoice_type=maintenance&company_name="+str2,
           data: null,
           success: function(data){
-            $('#submit').prop('disabled', true)
+
             $("#input-3").empty();
             $("#input-3").append("<option value='' disabled selected>Choose your option</option>")
             $.each(data, function(idx,item){
@@ -115,7 +159,7 @@
       })
       $("#input-3").change( function() {
           $('#item_name').val($("#input-3 option:selected").text());
-          $('#submit').prop('disabled', false)
+
       })
     });
   </script>

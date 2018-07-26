@@ -9,8 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "adm-zip": "^0.4.11",
     "alert-node": "^1.2.1",
     "body-parser": "^1.18.3",
+    "csv-express": "^1.2.2",
     "csv-parse": "^2.5.0",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
@@ -21,12 +23,14 @@
     "ipware": "^1.0.0",
     "method-override": "^3.0.0",
     "multer": "^1.3.1",
+    "node-zip": "^1.1.1",
     "nodemon": "^1.17.5",
     "pdf-image": "^2.0.0",
     "pdf2img": "^0.5.0",
     "pdftoimage": "^1.0.0",
     "pg-promise": "^8.4.4",
     "popups": "^1.1.3",
-    "string-similarity": "^1.2.0"
+    "string-similarity": "^1.2.0",
+    "x-date": "^1.0.2"
   }
 }

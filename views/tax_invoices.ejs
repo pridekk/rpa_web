@@ -5,6 +5,50 @@
 <body>
   <% include ./nav.ejs %>
   <div class="container col s12">
+    <div class="row">
+      <form action="/monthly_reports" method="get">
+        <div class="input-field col s4 l2">
+          <select name="invoice_type">
+            <% if(typeof invoice_type !== "undefined" && invoice_type === "maintenance") { %>
+              <option value="<%=invoice_type%>" selected>유지보수</option>
+              <option value="<%=invoice_type%>">정보이용료</option>
+            <% } else { %>
+              <option value="<%=invoice_type%>" >유지보수</option>
+              <option value="<%=invoice_type%>" selected>정보이용료</option>
+            <% } %>
+          </select>
+          <label>구분</label>
+        </div>
+        <div class="input-field col s4 l2">
+          <select name="year">
+            <% for(var i =2018 ;i<2025;i++) { %>
+              <% if(typeof year !== "undefined" && parseInt(year) === i) { %>
+                <option value="<%=i%>" selected><%=i%>월</option>
+              <% } else { %>
+                <option value="<%=i%>"><%=i%>월</option>
+              <% } %>
+            <% } %>
+          </select>
+          <label>년</label>
+        </div>
+        <div class="input-field col s4 l2">
+          <select name="month">
+            <% for(var i =1 ;i<13;i++) { %>
+              <% if(typeof month !== "undefined" && parseInt(month) === i) { %>
+                <option value="<%=i%>" selected><%=i%>월</option>
+              <% } else { %>
+                <option value="<%=i%>"><%=i%>월</option>
+              <% } %>
+            <% } %>
+          </select>
+          <label>월</label>
+        </div>
+        <div class="input-field col s2 l2">
+          <input class="btn" type="submit" value="제출">
+        </div>
+
+      </form>
+    </div>
     <table class="col s12">
       <thead>
         <th>출력번호</th>
@@ -42,7 +86,7 @@
           <td><%=item.diff_price%></td>
           <td>
             <% if( item.filepath && item.filepath !== "") {%>
-             <a class="Popup" href="/pdf/<%=item.filepath.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
+             <a class="Popup" href="/invoices/<%=item.filepath.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
             <% } %>
 
            </td>
@@ -50,7 +94,7 @@
              <a  href="/tax_invoice/<%=item.invoice_id%>"><i class="material-icons">edit</i></a>
            </td>
            <td>
-             <a class="delete" href="/tax_invoices/delete/<%=item.invoice_id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</i></a>
+             <a class="delete" href="/tax_invoices/delete/<%=item.invoice_id%>"  data-method="delete"  onclick="return confirm('정말지우시겠습니까?');"  rel="nofollow"><i class="material-icons">delete</i></a>
            </td>
         </tr>
       <% } %>
@@ -59,8 +103,6 @@
   </div>
 
   <% include ./footer.ejs %>
-  <script>
 
-  </script>
 </body>
 </html>

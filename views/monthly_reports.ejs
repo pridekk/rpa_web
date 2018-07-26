@@ -1,0 +1,122 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+</head>
+<body>
+  <% include ./nav.ejs %>
+  <div class="container col s12">
+    <div class="row">
+      <form action="/monthly_reports" method="get">
+        <div class="input-field col s4 l2">
+          <select name="invoice_type">
+            <% if(typeof invoice_type !== "undefined" && invoice_type === "maintenance") {
+              %>
+              <option value="maintenance" selected>유지보수</option>
+              <option value="fee">정보이용료</option>
+            <% } else { invoice_type = "fee" %>
+              <option value="maintenance" >유지보수</option>
+              <option value="fee" selected>정보이용료</option>
+            <% } %>
+          </select>
+          <label>구분</label>
+        </div>
+        <div class="input-field col s4 l2">
+          <select name="year">
+            <% for(var i =2018 ;i<2025;i++) { %>
+              <% if(typeof year !== "undefined" && parseInt(year) === i) { %>
+                <option value="<%=i%>" selected><%=i%>월</option>
+              <% } else { %>
+                <option value="<%=i%>"><%=i%>월</option>
+              <% } %>
+            <% } %>
+          </select>
+          <label>년</label>
+        </div>
+        <div class="input-field col s4 l2">
+          <select name="month">
+            <% for(var i =1 ;i<13;i++) { %>
+              <% if(typeof month !== "undefined" && parseInt(month) === i) { %>
+                <option value="<%=i%>" selected><%=i%>월</option>
+              <% } else { %>
+                <option value="<%=i%>"><%=i%>월</option>
+              <% } %>
+            <% } %>
+          </select>
+          <label>월</label>
+        </div>
+        <div class="input-field col s2 l2">
+          <input class="btn left" type="submit" value="제출">
+          <a class="btn right" href="/monthly_reports/export?invoice_type=<%=invoice_type%>&month=<%=month%>&year=<%=year%>">Export</a>
+        </div>
+        <div class="input-field col s2 l2">
+
+        </div>
+      </form>
+
+    </div>
+    <table class="col s12">
+      <thead>
+        <th>출력번호</th>
+        <th>회사명</th>
+        <th>사업자번호</th>
+        <th>품목</th>
+        <th>총금액</th>
+        <th>차액</th>
+        <th>세금계산서</th>
+        <% if(invoice_type === "maintenance") { %>
+          <th>유지보수확인서</th>
+        <% } %>
+
+      </thead>
+      <tbody>
+      <% for(var i = 0, len = data.length; i < len; i++) { item = data[i]; %>
+        <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
+
+          <td><%=item.print_number%></td>
+          <td><%=item.company_name%></td>
+          <% if (companies_map[item.company_id]){%>
+            <td><%=companies_map[item.company_id].company_number%></td>
+          <% } else { %>
+            <td></td>
+          <% } %>
+
+          <td><%=item.item_name%></td>
+          <td><%=item.total_price%></td>
+          <td><%=item.diff_price%></td>
+          <td>
+            <% if (item.tid)  { %>
+              <a class="Popup" href="/tax_invoice/<%=item.tid%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a>
+
+            <% } else { %>
+
+              <a href="/tax_invoices/new?item_id=<%=item.id%>&invoice_type=<%=invoice_type%>&company_name=<%=item.company_name%>&item_name=<%=item.item_name%>&total_price=<%=item.total_price%>&bill_year=<%=year%>&bill_month=<%=month%>"><i class="material-icons">add</i></a>
+            <% } %>
+
+          </td>
+          <% if(invoice_type === "maintenance") { %>
+            <td>
+              <% if (item.mid)  { %>
+                <a class="Popup" href="/maintain_report/<%=item.mid%>?from=monthly_reports" ><i class="material-icons">picture_as_pdf</i></a>
+              <% } else { %>
+                <a href="/maintain_reports/new?item_id=<%=item.id%>&company_name=<%=item.company_name%>&item_name=<%=item.item_name%>&bill_year=<%=year%>&bill_month=<%=month%>"><i class="material-icons">add</i></a>
+              <% } %>
+
+            </td>
+          <% } %>
+
+
+
+        </tr>
+      <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <% include ./footer.ejs %>
+  <script>
+    $(document).ready(function(){
+       $('select').formSelect();
+     });
+  </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+</head>
+<body>
+  <% include ./nav.ejs %>
+  <div class="container">
+    <h4>업체 품의 등록</h4>
+    <form action="/items"  enctype="multipart/form-data" method="post" >
+
+      <div class="row">
+
+        <div class="col s12 l3">
+          <label>세금계산서처리타입</label>
+          <div class="input-field">
+            <select id="select_invoice_type" required>
+              <option value='' disabled selected>Choose your option</option>
+              <option value="maintenance">유지보수</option>
+              <option value="fee" >정보이용료</option>
+            </select>
+            <input type="hidden" name="invoice_type" id="invoice_type" value="maintenance" >
+          </div>
+        </div>
+        <div class="col s12 l3">
+          <label>업체이름</label>
+          <div class="input-field">
+            <select id="select_company" required>
+              <option value='' disabled selected>Choose your option</option>
+              <% for (var i =0;i<companies.length; i++){ %>
+                <option value="<%=companies[i].id%>"><%=companies[i].company_name%></option>
+              <% } %>
+            </select>
+            <input type="hidden" name="company_id" id="company_id" >
+          </div>
+
+      </div>
+      <div class="col s12 l6">
+        <label>계산서발송SITE</label>
+        <div class="input-field">
+          <select id="select_issuer"  required>
+            <option value='' disabled selected>Choose your option</option>
+            <% for (var i =0;i<issuers.length; i++){ %>
+                <option value="<%=issuers[i].id%>"><%=issuers[i].issuer_name%></option>
+            <% } %>
+          </select>
+          <input type="hidden" name="issuer_id" id="issuer_id" >
+        </div>
+      </div>
+
+      <div class="row">
+
+        </div>
+        <div class="col s12 l6">
+          <label>품의명</label>
+          <input type="text" name="item_name" placeholder="품의명"  required>
+        </div>
+        <div class="col s12 l3">
+          <label>출력순서</label>
+          <input type="text" name="print_number" placeholder="출력순서"   required>
+        </div>
+        <div class="col s12 l6">
+          <label>발송내역문구</label>
+          <input type="text" name="best_match" placeholder="품의내용 발송 문구" >
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12 l3">
+          <label>총금액(부가세포함)</label>
+          <div class="input-field">
+            <input type="text" name="total_price" placeholder="금액"  required>
+          </div>
+        </div>
+        <div class="col s12 l9">
+          <label>품의서첨부</label>
+          <div class = "file-field input-field">
+            <div class = "btn">
+            <span>검색</span>
+            <input name="userfile" type = "file"  />
+            </div>
+
+            <div class = "file-path-wrapper">
+            <input class = "file-path validate" type = "text"
+             placeholder = "Upload file" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class = "row">
+        <div class="col s12 l12">
+            <input class="right btn" type="submit"  value="등록">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <% include ./footer.ejs %>
+  <script>
+    $(document).ready(function(){
+      $('select').formSelect();
+      $('#issuer_id').val($("#select_issuer option:selected").val());
+      $('#company_id').val($("#select_company option:selected").val());
+      $('#invoice_type').val($("#select_invoice_type option:selected").val());
+
+      $("#select_issuer").change( function() {
+          $('#issuer_id').val($("#select_issuer option:selected").val());
+      })
+      $("#select_company").change( function() {
+          $('#company_id').val($("#select_company option:selected").val());
+      })
+      $("#select_invoice_type").change( function() {
+          $('#invoice_type').val($("#select_invoice_type option:selected").val());
+      })
+    });
+  </script>
+</body>
+</html>

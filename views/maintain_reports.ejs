@@ -11,79 +11,65 @@
 
 
   <div class="container col s12">
-      <div class="row">
-        <form action="/maintain_reports" method="get">
-          <div class="input-field col s4 l2">
-            <select name="year">
-              <% for(var i =2018 ;i<2022;i++) { %>
-                <% if(typeof year !== "undefined" && parseInt(year) === i) { %>
-                  <option value="<%=i%>" selected><%=i%>월</option>
-                <% } else { %>
-                  <option value="<%=i%>"><%=i%>월</option>
-                <% } %>
-              <% } %>
-            </select>
-            <label>년</label>
-          </div>
-          <div class="input-field col s4 l2">
-            <select name="month">
-              <% for(var i =1 ;i<12;i++) { %>
-                <% if(typeof month !== "undefined" && parseInt(month) === i) { %>
-                  <option value="<%=i%>" selected><%=i%>월</option>
-                <% } else { %>
-                  <option value="<%=i%>"><%=i%>월</option>
-                <% } %>
-              <% } %>
-            </select>
-            <label>월</label>
-          </div>
-          <div class="input-field col s2 l2">
-            <label>
-            <input type="checkbox" name="displaymode" checked="checked" />
-            <span class="blue-text text-darken-2">미분류보기</span>
+    <div class="row">
+      <form action="/maintain_reports" method="get">
+        <div class="input-field col s12 l2">
+          <label>
+            <% if(typeof is_archive !== 'undefined' && is_archive){ %>
+              <input type="checkbox" name="is_archive" checked="checked" />
+            <% } else { %>
+              <input type="checkbox" name="is_archive" />
+            <% } %>
+            <span class="blue-text text-darken-2">확정포함검색</span>
           </label>
-          </div>
-          <div class="input-field col s2 l2">
-            <input class="btn" type="submit" value="제출">
-          </div>
+        </div>
+        <div class="input-field col s8 l4">
+          <input type="text" name="search" >
+          <label>검색</label>
+        </div>
+        <div class="input-field col s4 l2">
+          <input class="btn" type="submit" value="제출">
+        </div>
 
-        </form>
-      </div>
-  <table>
-    <tr>
-      <th>출력번호</th>
-      <th>회사명</th>
-      <th>품목</th>
-      <th>발신자</th>
-      <th>제목</th>
-      <th>수신일</th>
-      <th>계산서보기</th>
-      <th colspan="2"></td>
-    </tr>
-    <% data.forEach( (item) => { %>
-    <tr>
-      <td><%=item.print_number%></td>
-      <td><%=item.company_name%></td>
-      <td><%=item.item_name%></td>
+      </form>
+    </div>
 
-      <td><%=item.sender%></td>
-      <td><%=item.subject%></td>
-      <td><%=item.received_at%></td>
+      <table>
+        <tr>
+          <th>회사명</th>
+          <th>품목</th>
+          <th>발신자</th>
+          <th>제목</th>
+          <th>년</th>
+          <th>월</th>
+          <th>수신일</th>
+          <th>보고서보기</th>
+          <th colspan="2"></td>
+        </tr>
+        <% data.forEach( (report) => { %>
+        <tr>
+          <td><%=report.company_name%></td>
+          <td><%=report.item_name%></td>
+          <td><%=report.sender%></td>
+          <td><%=report.subject%></td>
+          <td><%=report.year%></td>
+          <td><%=report.month%></td>
+          <td><%=report.received_at%></td>
 
-      <td>
-        <% if( item.filepath && item.filepath !== "") {%>
-         <a class="Popup" href="/maintain_reports/<%=item.filepath.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
-        <% } %>
-       </td>
-       <td>
-         <a  href="/maintain_report/<%=item.id%>"><i class="material-icons">edit</i></a>
-       </td>
-       <td>
-         <a class="delete" href="/maintain_reports/delete/<%=item.id%>"  data-method="delete"  rel="nofollow"><i class="material-icons">delete</i></a>
-       </td>
-    </tr>
-    <% }) %>
-  </table>
+          <td>
+            <% if( report.filepath && report.filepath !== "") {%>
+             <a class="Popup" href="/maintain_reports/<%=report.filepath.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
+            <% } %>
+           </td>
+           <td>
+             <a  href="/maintain_report/<%=report.id%>"><i class="material-icons">edit</i></a>
+           </td>
+           <td>
+             <a class="delete" href="/maintain_reports/delete/<%=report.id%>"  data-method="delete"  rel="nofollow"  onclick="return confirm('정말지우시겠습니까?');"><i class="material-icons">delete</i></a>
+           </td>
+        </tr>
+        <% }) %>
+      </table>
 
 </div>
 <% include ./footer.ejs %>

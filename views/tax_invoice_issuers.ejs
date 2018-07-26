@@ -15,15 +15,25 @@
   <% include ./nav.ejs %>
 
   <div class="container">
-    <h3> 세금계산서 발행 기관 </h3>
 
-    <a class="right" href="/tax_invoice_issuers/new"><i class="medium material-icons">add_box</i></a>
+
+
+
+    <div class="row">
+      <div class="col">
+        <h4 class="card-title">세금계산서 발행 Site</h4>
+        <p>세금계산서를 발행해주는 site로 outlook에서 수신할 세금계산서 대상을 선택하기 위해 사용됩니다.</p>
+      </div>
+    </div>
+
+
     <table class="example">
       <thead>
         <th>발행기관</th>
         <th>메일 제목 포함문구</th>
         <th>메일 본문 포함문구</th>
-        <th></td>
+        <th></th>
+        <th></th>
       </thead>
       <tbody>
       <% for(var i = 0, len = data.length; i < len; i++) { item = data[i]; %>
@@ -33,13 +43,17 @@
         <td><%=item.mail_body%></td>
          <td>
            <a  href="/tax_invoice_issuer/<%=item.id%>"><i class="material-icons">edit</i></a>
+         </td>
+         <td>
            <a class="delete" href="/tax_invoice_issuer/delete/<%=item.id%>"  data-method="delete"  onclick="return confirm('정말지우시겠습니까?');"    rel="nofollow"><i class="material-icons">delete</i></a>
          </td>
       </tr>
       <% } %>
     </tbody>
     </table>
-</div>
+  </div>
+
+
 <script type="text/javascript">
 
   $(() =>  {
