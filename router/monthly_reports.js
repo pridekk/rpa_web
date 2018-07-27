@@ -13,7 +13,7 @@ module.exports = function(app, fs, db, companies_map){
       req.session.invoice_type = invoice_type
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select c_id as id, print_number, tic.company_name, tic.item_name, total_price, diff_price,filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
+        db.manyOrNone(`select c_id as id, print_number, tic.company_name, tic.item_name, total_price, diff_price,tic.filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
           from ( Select tc.id as c_id, ti.id as tid, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, tc.total_price as total_price,
 	          (ti.total_price - tc.total_price ) as diff_price, company_number, filepath from items as tc left outer join
             (select * from tax_invoices where confirmed = true and bill_month like '%${month}%' and bill_year like '%${year}%') as ti
@@ -47,7 +47,7 @@ module.exports = function(app, fs, db, companies_map){
 
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select c_id as id, print_number, tic.company_name, tic.item_name, total_price, diff_price,filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
+        db.manyOrNone(`select c_id as id, print_number, tic.company_name, tic.item_name, total_price, diff_price,tic.filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
           from ( Select tc.id as c_id, ti.id as tid, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, tc.total_price as total_price,
             (ti.total_price - tc.total_price ) as diff_price, company_number, filepath from items as tc left outer join
             (select * from tax_invoices where confirmed = true and bill_month like '%${month}%' and bill_year like '%${year}%') as ti

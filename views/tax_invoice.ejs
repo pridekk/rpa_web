@@ -131,7 +131,7 @@
       </form>
     </div>
     <div class="col s12 l6">
-      <% if(data.filepath.split('.').pop() === "pdf") { %>
+      <% if(data.filepath.split('.').pop().toLowerCase(); === "pdf") { %>
           <embed src="/invoices/<%=data.filepath.split('\\').pop()%>" type="application/pdf" width="100%" height="600px" view="Fit" />
       <% } else { %>
         <img src="/invoices/<%=data.filepath.split('\\').pop()%>" width="100%" />

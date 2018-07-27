@@ -93,7 +93,7 @@ module.exports = function(app, fs, db, upload){
 
   });
   app.get('/maintain_reports/delete/:id', (req,res) => {
-     console.log(req.params.id)
+     console.log(req.headers.referer)
      report_id = req.params.id
 
 
@@ -126,8 +126,12 @@ module.exports = function(app, fs, db, upload){
          req.flash('success', '삭제성공.')
          if(req.session.origin === "monthly_reports"){
            res.redirect(`/monthly_reports?invoice_type=maintenance&month=${data.month}&year=${data.year}`)
+         } else if (req.headers.referer.includes("maintain_reports") ) {
+           res.redirect(req.headers.referer)
+         }else {
+           res.redirect("/maintain_reports")
          }
-         res.redirect("/maintain_reports")
+
        })
        .catch( (err) => {
          console.log("Error: ", err);
