@@ -1,5 +1,10 @@
 // var popupS = require('popups');
 var adm_zip = require('adm-zip');
+var json2csv = require('json2csv');
+var jsonexport = require('jsonexport')
+var fields = ['id', 'print_number', 'company_name','item_name', 'total_price', 'diff_price', 'ti_file','tid', 'mid', 'mr_file', 'company_number']
+
+
 module.exports = function(app, fs, db, companies_map){
 
 
@@ -55,30 +60,54 @@ module.exports = function(app, fs, db, companies_map){
             left outer join (select * from maintain_reports where confirmed = true and month like '%${month}%' and year like '%${year}%') as mr on tic.c_id = mr.tax_invoice_company_id order by print_number`)
         .then((data) => {
           let json = JSON.stringify(data)
-          fs.writeFile ("maintenance.json", JSON.stringify(data), function(err) {
-              if (err) throw err;
-              console.log('json tranform complete');
-              console.log(data[0])
-              let zip = new adm_zip()
-              zip.addLocalFile("maintenance.json")
-              for(var i =0,len=data.length;i<len;i++){
-                if(data[i].mr_file){
-                  filepath = __dirname + "/../public/maintain_reports/" + data[i].mr_file.split('\\').pop()
-                  console.log(filepath)
-                  zip.addLocalFile(filepath)
-                }
-              }
-              zip.writeZip( __dirname + "/../public/maintain_reports/" + "test.zip")
-              res.download( __dirname + "/../public/maintain_reports/" + "test.zip", "down.zip", (err) =>{
-                if(err){
-                  res.send(err)
-                }else{
-                  console.log("file download complete")
-                }
-              })
+          // let csv = json2csv.parse(json, {fields:fields})
+          // console.log(json)
+          // console.log(csv)
+          jsonexport(data, (err,csv) => {
+            if(err) return console.log(err)
+            // console.log(csv)
+            fs.writeFile ("maintenance.csv", csv, (err) => {
+                if (err) throw err;
+                console.log('csv tranform complete');
+                console.log(data[0])
+                let zip = new adm_zip()
+                zip.addLocalFile("maintenance.csv")
+                for(var i =0,len=data.length;i<len;i++){
+                  if(data[i].mr_file){
+                    filepath = __dirname + "/../public/maintain_reports/" + data[i].mr_file.split('\\').pop()
+                    console.log(filepath)
+                    zip.addLocalFile(filepath)
+                  }
+                  if(data[i].ti_file){
+                    filepath = __dirname + "/../public/invoices/" + data[i].ti_file.split('\\').pop()
+                    console.log(filepath)
+                    zip.addLocalFile(filepath)
+                  }
 
-            }
-          );
+                }
+                zip.writeZip( __dirname + "/../public/maintain_reports/" + "test.zip")
+                res.download( __dirname + "/../public/maintain_reports/" + "test.zip", "down.zip", (err) =>{
+                  if(err){
+                    res.send(err)
+                  } else {
+                    fs.unlink("maintenance.csv" , (err) => {
+                      if(err){
+                        console.log(err)
+                      }
+                    })
+                    fs.unlink( __dirname + "/../public/maintain_reports/" + "test.zip", (err) => {
+                      if(err) {
+                        console.log(err)
+                      }
+                    })
+                    console.log("file download complete")
+                  }
+                })
+
+              }
+            );
+          })
+
 
           //res.csv([{a:1}, {a:1}])
         })

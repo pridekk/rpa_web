@@ -77,7 +77,7 @@ module.exports = function(app, fs, db){
       } else{
         query_string = query_string + "'maintenance'"
       }
-      db.manyOrNone(query_string)
+      db.manyOrNone(query_stringrp)
       .then((data) => {
         for(var i =0,len = data.length;i<len;i++){
           items.push(data[i].item_name)
