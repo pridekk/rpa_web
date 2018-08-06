@@ -66,25 +66,33 @@ module.exports = function(app, fs, db){
     let itemIndex={}
     let item = req.params.item_name.replace("유지보수").replace("계약").trim()
     let company = req.query.company
-    console.log(company)
+    console.log(req.query)
+    console.log(item)
     let check_type = req.query.type
     if(company){
       matches = string_similarity.findBestMatch(company, companies)
 
       let query_string = `select * from items where company_id = ${companyIndex[matches.bestMatch.target]} and invoice_type = `
-      if(chech_typ === "fee"){
+      if(check_type === "fee"){
         query_string = query_string + "'fee'"
       } else{
         query_string = query_string + "'maintenance'"
       }
-      db.manyOrNone(query_stringrp)
+      console.log(query_string)
+      db.manyOrNone(query_string)
       .then((data) => {
-        for(var i =0,len = data.length;i<len;i++){
-          items.push(data[i].item_name)
-          itemIndex[data[i].item_name]=data[i].id
+        console.log(data)
+        if(data.length === 0 ){
+          res.json({company_name: "", ratio: 0, id: 0})
+        }else{
+          for(var i =0,len = data.length;i<len;i++){
+            items.push(data[i].item_name)
+            itemIndex[data[i].item_name]=data[i].id
+          }
+          matches = string_similarity.findBestMatch(item, items)
+          res.json({bestMatch: matches.bestMatch.target, ratio: matches.bestMatch.rating*100, id: itemIndex[matches.bestMatch.target]})
+
         }
-        matches = string_similarity.findBestMatch(item, items)
-        res.json({bestMatch: matches.bestMatch.target, ratio: matches.bestMatch.rating*100, id: itemIndex[matches.bestMatch.target]})
 
       })
     }else{
