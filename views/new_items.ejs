@@ -9,7 +9,6 @@
     <form action="/items"  enctype="multipart/form-data" method="post" >
 
       <div class="row">
-
         <div class="col s12 l3">
           <label>세금계산서처리타입</label>
           <div class="input-field">
@@ -32,24 +31,22 @@
             </select>
             <input type="hidden" name="company_id" id="company_id" >
           </div>
-
-      </div>
-      <div class="col s12 l6">
-        <label>계산서발송SITE</label>
-        <div class="input-field">
-          <select id="select_issuer"  required>
-            <option value='' disabled selected>Choose your option</option>
-            <% for (var i =0;i<issuers.length; i++){ %>
-                <option value="<%=issuers[i].id%>"><%=issuers[i].issuer_name%></option>
-            <% } %>
-          </select>
-          <input type="hidden" name="issuer_id" id="issuer_id" >
+        </div>
+        <div class="col s12 l6">
+          <label>계산서발송SITE</label>
+          <div class="input-field">
+            <select id="select_issuer"  required>
+              <option value='' disabled selected>Choose your option</option>
+              <% for (var i =0;i<issuers.length; i++){ %>
+                  <option value="<%=issuers[i].id%>"><%=issuers[i].issuer_name%></option>
+              <% } %>
+            </select>
+            <input type="hidden" name="issuer_id" id="issuer_id" >
+          </div>
         </div>
       </div>
 
       <div class="row">
-
-        </div>
         <div class="col s12 l6">
           <label>품의명</label>
           <input type="text" name="item_name" placeholder="품의명"  required>

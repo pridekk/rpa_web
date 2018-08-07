@@ -171,7 +171,7 @@ module.exports = function(app, fs, db,upload, companies_map){
            // for(var i = 0, len = data2.length; i < len; i++){
            //   console.log(data2[i].company_name)
            // }
-          
+
 
            res.render('tax_invoice', {
              title: "세금계산서수정",
@@ -204,7 +204,7 @@ module.exports = function(app, fs, db,upload, companies_map){
       db.oneOrNone(query_string)
       .then((data) => {
         console.log(data)
-        db.none(`update tax_invoices set tax_invoice_company_id = ${data.id},  price = ${invoice.price}, tax= ${invoice.tax}, total_price= ${invoice.total_price},
+        db.none(`update tax_invoices set evidence_date = '${invoice.evidence_date}',tax_invoice_company_id = ${data.id},  price = ${invoice.price}, tax= ${invoice.tax}, total_price= ${invoice.total_price},
           bill_year= '${invoice.bill_year}', bill_month= '${invoice.bill_month}', company_number = '${invoice.company_number}', confirmed = ${invoice.confirmed} where id = ${invoice_id}`)
         .then(() => {
            req.flash('success', '수정 완료')
@@ -222,7 +222,7 @@ module.exports = function(app, fs, db,upload, companies_map){
         res.end()
       });
     }else{
-      db.none(`update tax_invoices set price = ${invoice.price}, tax= ${invoice.tax}, total_price= ${invoice.total_price},
+      db.none(`update tax_invoices set evidence_date = '${invoice.evidence_date}', price = ${invoice.price}, tax= ${invoice.tax}, total_price= ${invoice.total_price},
         bill_year= ${invoice.bill_year}, bill_month= ${invoice.bill_month} , confirmed = ${invoice.confirmed} , company_number = '${invoice.company_number}' where id = ${invoice_id}`)
       .then(() => {
          req.flash('success', '수정 완료')
@@ -245,9 +245,9 @@ module.exports = function(app, fs, db,upload, companies_map){
       //console.log(req)
       let company = req.body;
       console.log(company)
-      query_string = `insert into tax_invoices (company, tax_invoice_company_id, item_name, bill_year, bill_month, month, day, price, tax, total_price, filepath, confirmed ) Values (
+      query_string = `insert into tax_invoices (company, tax_invoice_company_id, item_name, bill_year, bill_month, evidence_date, price, tax, total_price, filepath, confirmed ) Values (
          '${company.company_name}',${company.tax_invoice_company_id},'${company.item_name}','${company.bill_year}',
-         '${company.bill_month}', '${company.month}', '${company.day}',${company.price},${company.tax},${company.total_price},'${req.file.filename}',`;
+         '${company.bill_month}', '${company.evidence_date}',${company.price},${company.tax},${company.total_price},'${req.file.filename}',`;
       if(company.confirmed === 'on'){
         query_string = query_string + "true)"
       }else {

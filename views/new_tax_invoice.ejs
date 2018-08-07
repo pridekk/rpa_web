@@ -9,16 +9,13 @@
   <div class="container">
     <h3> 세금계산서 등록</h3>
     <div class="row">
-    <div class="col s12 l6">
+    <div class="col s12 l8">
       <form action="/tax_invoices"  enctype="multipart/form-data" method="post">
         <div class="row">
           <div class="input-field col s12 l5">
             <label for="company_name">업체명</label><input type="text" name="company_name" placeholder="업체명"   value="<%=data.company_name%>"required>
             <input type="hidden" name="tax_invoice_company_id" placeholder="업체명"   value="<%=data.item_id%>"required>
             <input type="hidden" name="invoice_type" placeholder="업체명"   value="<%=data.invoice_type%>"required>
-          </div>
-          <div class="input-field col s12 l7">
-            <label for="company_number">사업자번호</label><input type="text" name="company_number" placeholder="품목"  value="<%=data.company_number%>" required>
           </div>
         </div>
         <div class="row">
@@ -34,12 +31,10 @@
             <label>확정월</label><input type="text" name="bill_month" placeholder="세금계산서 확정월을 입력"  value="<%=data.bill_month%>"required>
           </div>
           <div class="input-field col s12 l3">
-            <label for="company_name">발행월</label><input type="text" name="month" placeholder="월"   value="<%=data.month%>" required>
-          </div>
-          <div class="input-field col s12 l3">
-            <label for="company_name">발행일</label><input type="text" name="day" placeholder="일"    value="<%=data.day%>"required>
+            <label>증빙일</label><input type="text" name="evidence_date" placeholder="세금계산서 증빙일 입력"  value="<%=data.evidence_date%>"required>
           </div>
         </div>
+
         <div class="row">
           <div class="input-field col s12 l4">
             <label for="company_name">금액</label><input type="text" name="price" placeholder="가격"  value="<%=data.price%>" required>
@@ -52,7 +47,6 @@
           </div>
         </div>
         <div class="row">
-
           <div class="col s12 l9">
             <label>계산서첨부</label>
             <div class = "file-field input-field">

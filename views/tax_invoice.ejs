@@ -15,13 +15,7 @@
           <div class="input-field col s12 l5">
             <label for="company_name">업체명</label><input type="text" name="company_name" placeholder="업체명"  disabled value="<%=data.company%>"required>
           </div>
-          <div class="input-field col s12 l7">
-            <% if (tax_invoice_company) { %>
-              <label for="company_number">사업자번호</label><input type="text" name="company_number" placeholder="품목"  disabled value="<%=companies_map[tax_invoice_company.company_id].company_number%>" required>
-            <% } else { %>
-              <label for="company_number">사업자번호</label><input type="text" name="company_number" placeholder="사업자번호가 없습니다 업체정보를 갱신하세요"  disabled value="" required>
-            <% } %>
-          </div>
+
         </div>
         <div class="row">
           <div class="input-field col s12 l10">
@@ -53,12 +47,10 @@
             </select>
             <label>월</label>
           </div>
-          <div class="input-field col s12 l3">
-            <label for="company_name">발행월</label><input type="text" name="month" placeholder="월"  disabled value="<%=data.month%>" required>
+          <div class="input-field col s12 l4">
+            <label for="company_name">증빙일</label><input type="text" name="evidence_date" placeholder="증빙일"    value="<%=data.evidence_date%>"required>
           </div>
-          <div class="input-field col s12 l3">
-            <label for="company_name">발행일</label><input type="text" name="day" placeholder="일"   disabled value="<%=data.day%>"required>
-          </div>
+
         </div>
         <div class="row">
           <div class="input-field col s12 l4">

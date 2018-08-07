@@ -62,7 +62,6 @@
         <th>품목</th>
         <th>총금액</th>
         <th>차액</th>
-        <th>증빙월</th>
         <th>증빙일</th>
         <th>세금계산서</th>
         <% if(invoice_type === "maintenance") { %>
@@ -86,8 +85,7 @@
           <td><%=item.item_name%></td>
           <td><%=item.total_price%></td>
           <td><%=item.diff_price%></td>
-          <td><%=item.ti_month%></td>
-          <td><%=item.ti_day%></td>
+          <td><%=item.evidence_date%></td>
           <td>
             <% if (item.tid)  { %>
               <a class="Popup" href="/tax_invoice/<%=item.tid%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a>

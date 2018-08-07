@@ -37,8 +37,7 @@
       <th>수신회사</th>
       <th>수신품목</th>
       <th>관리번호</th>
-      <th>월</th>
-      <th>일</th>
+      <th>증빙일</th>
       <th>금액</th>
       <th>세액</th>
       <th>총금액</th>
@@ -48,12 +47,11 @@
     </tr>
     <% data.forEach( (item) => { %>
     <tr>
-      <td><%=item.company%></td>
+      <td><a href="/tax_invoice/<%=item.id%>" ><%=item.company%></a></td>
 
-      <td><%=item.item_name%></td>
-      <td><%=item.mgmt_id%></td>
-      <td><%=item.month%></td>
-      <td><%=item.day%></td>
+      <td><a href="/tax_invoice/<%=item.id%>" ><%=item.item_name%></a></td>
+      <td><a href="/tax_invoice/<%=item.id%>" ><%=item.mgmt_id%></a></td>
+      <td><%=item.evidence_date%></td>
       <td><%=item.price%></td>
       <td><%=item.tax%></td>
       <td><%=item.total_price%></td>
@@ -62,7 +60,7 @@
         <% if( item.filepath && item.filepath !== "") {%>
          <a class="Popup" href="/invoices/<%=item.filepath.split('\\').pop()%>"  target="_blank"><i class="material-icons">picture_as_pdf</i></a>
         <% } %>
-         <a class="Popup" href="/tax_invoice/<%=item.id%>"  target="_blank"><i class="material-icons">edit</i></a>
+         <a href="/tax_invoice/<%=item.id%>" ><i class="material-icons">edit</i></a>
        </td>
        <td>
          <a class="delete" href="/tax_invoices/delete/<%=item.id%>"  data-method="delete"  onclick="return confirm('정말지우시겠습니까?');" rel="nofollow"><i class="material-icons">delete</i></a>
