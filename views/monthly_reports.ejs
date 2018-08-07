@@ -62,6 +62,8 @@
         <th>품목</th>
         <th>총금액</th>
         <th>차액</th>
+        <th>증빙월</th>
+        <th>증빙일</th>
         <th>세금계산서</th>
         <% if(invoice_type === "maintenance") { %>
           <th>유지보수확인서</th>
@@ -74,8 +76,9 @@
 
           <td><%=item.print_number%></td>
           <td><%=item.company_name%></td>
-          <% if (companies_map[item.company_id]){%>
-            <td><%=companies_map[item.company_id].company_number%></td>
+
+          <% if (item.company_id && companies_map[item.company_id.toString()]){%>
+            <td><%=companies_map[item.company_id.toString()].company_number%></td>
           <% } else { %>
             <td></td>
           <% } %>
@@ -83,6 +86,8 @@
           <td><%=item.item_name%></td>
           <td><%=item.total_price%></td>
           <td><%=item.diff_price%></td>
+          <td><%=item.ti_month%></td>
+          <td><%=item.ti_day%></td>
           <td>
             <% if (item.tid)  { %>
               <a class="Popup" href="/tax_invoice/<%=item.tid%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a>

@@ -85,11 +85,11 @@ module.exports = function(app, fs, db, upload){
     let company_id = req.params.id
     console.log(company);
     if(req.file){
-      query_string = `update items set company_id = ${company.company_id},item_name='${company.item_name}',
+      query_string = `update items set code='${company.code}', company_id = ${company.company_id},item_name='${company.item_name}',
       issuer_id=${company.issuer_id}, best_match='${company.best_match}',total_price= ${company.total_price}, report_filename='${req.file.filename}'  where id = ${company_id}`;
       //console.log(query_string);
     }else{
-      query_string = `update items set company_id = ${company.company_id},item_name='${company.item_name}',
+      query_string = `update items set code='${company.code}',company_id = ${company.company_id},item_name='${company.item_name}',
       issuer_id=${company.issuer_id}, best_match='${company.best_match}',total_price= ${company.total_price}  where id = ${company_id}`;
     }
     console.log(query_string)
@@ -110,12 +110,12 @@ module.exports = function(app, fs, db, upload){
       console.log(req.file)
       console.log(company);
       if(req.file){
-        query_string = `insert into items (invoice_type, print_number, company_id, item_name, issuer_id, best_match, total_price, report_filename ) Values (
-           '${company.invoice_type}',${company.print_number},${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price}, '${req.file.filename}')`;
+        query_string = `insert into items (invoice_type, print_number, company_id, item_name, issuer_id, best_match, total_price, report_filename, code ) Values (
+           '${company.invoice_type}',${company.print_number},${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price}, '${req.file.filename}','${company.code}')`;
         //console.log(query_string);
       }else{
-        query_string = `insert into items (invoice_type, print_number, company_id, item_name, issuer_id, best_match, total_price ) Values (
-           '${company.invoice_type}',${company.print_number},${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price})`;
+        query_string = `insert into items (invoice_type, print_number, company_id, item_name, issuer_id, best_match, total_price ,code) Values (
+           '${company.invoice_type}',${company.print_number},${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price},'${company.code}')`;
       }
       db.none(query_string).then( () => {
         //console.log( "등록성공");
@@ -133,8 +133,8 @@ module.exports = function(app, fs, db, upload){
       year = req.params.year
       console.log(req.params)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select print_number, tic.company_name, tic.item_name, total_price, diff_price,filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
-          from ( Select tc.id as c_id, ti.id as tid, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, tc.total_price as total_price,
+        db.manyOrNone(`select code print_number, tic.company_name, tic.item_name, total_price, diff_price,filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
+          from ( Select tc.code as code, tc.id as c_id, ti.id as tid, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, tc.total_price as total_price,
 	          (ti.total_price - tc.total_price ) as diff_price, company_number, filepath from items as tc left outer join
             (select * from tax_invoices where confirmed = true and bill_month like '%${month}%' and bill_year like '%${year}%') as ti
             on tc.id = ti.tax_invoice_company_id where tc.invoice_type = '${invoice_type}') as tic

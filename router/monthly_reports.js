@@ -18,14 +18,15 @@ module.exports = function(app, fs, db, companies_map){
       req.session.invoice_type = invoice_type
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select c_id as id, print_number, tic.company_name, tic.item_name, total_price, diff_price,tic.filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
-          from ( Select tc.id as c_id, ti.id as tid, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, tc.total_price as total_price,
+        db.manyOrNone(`select ti_month, ti_day, c_id as id, print_number, tic.company_name, tic.item_name, total_price, diff_price,tic.filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
+          from ( Select ti.month as ti_month, ti.day as ti_day,tc.id as c_id, ti.id as tid, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, tc.total_price as total_price,
 	          (ti.total_price - tc.total_price ) as diff_price, company_number, filepath from items as tc left outer join
             (select * from tax_invoices where confirmed = true and bill_month like '%${month}%' and bill_year like '%${year}%') as ti
             on tc.id = ti.tax_invoice_company_id where tc.invoice_type = '${invoice_type}') as tic
             left outer join (select * from maintain_reports where confirmed = true and month like '%${month}%' and year like '%${year}%') as mr on tic.c_id = mr.tax_invoice_company_id order by print_number`)
         .then((data) => {
-          console.log(data[0])
+          console.log(data[1])
+          console.log(companies_map[data[1].id])
           res.render('monthly_reports', {
             title: invoice_type,
             data: data,
@@ -52,8 +53,8 @@ module.exports = function(app, fs, db, companies_map){
 
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select c_id as id, print_number, tic.company_name, tic.item_name, total_price, diff_price,tic.filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
-          from ( Select tc.id as c_id, ti.id as tid, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, tc.total_price as total_price,
+        db.manyOrNone(`select c_id as id, tic.company_name, tic.item_name, ti_day, ti_month, print_number,price,tax, total_price, diff_price,tid, tic.filepath as ti_file, mr.id as mid, mr.filepath as mr_file
+          from ( Select ti.month as ti_month, ti.day as ti_day, tc.id as c_id, ti.id as tid, ti.price, ti.tax, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, ti.total_price as total_price,
             (ti.total_price - tc.total_price ) as diff_price, company_number, filepath from items as tc left outer join
             (select * from tax_invoices where confirmed = true and bill_month like '%${month}%' and bill_year like '%${year}%') as ti
             on tc.id = ti.tax_invoice_company_id where tc.invoice_type = '${invoice_type}') as tic

@@ -171,6 +171,8 @@ module.exports = function(app, fs, db,upload, companies_map){
            // for(var i = 0, len = data2.length; i < len; i++){
            //   console.log(data2[i].company_name)
            // }
+          
+
            res.render('tax_invoice', {
              title: "세금계산서수정",
              data: data ,

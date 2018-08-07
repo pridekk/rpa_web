@@ -39,6 +39,7 @@
            <th>ID</th>
            <th>업체명</th>
            <th>품의명</th>
+           <th>코드번호</th>
            <th>출력순서</th>
            <th>발행기관</th>
            <th>금액</th>
@@ -52,6 +53,7 @@
            <td class="maintenance_id"><%=item.id%></td>
            <td><%=companies[item.company_id].company_name%></td>
            <td><%=item.item_name%></td>
+           <td><%=item.code%></td>
            <td><%=item.print_number%></td>
            <% if(item.issuer_id) { %>
              <td><%=issuers[item.issuer_id].issuer_name%></td>
@@ -104,6 +106,7 @@
                <th>ID</th>
                <th>업체명</th>
                <th>품의명</th>
+               <th>코드번호</th>
                <th>출력순서</th>
                <th>발행기관</th>
                <th>금액</th>
@@ -117,6 +120,7 @@
                <td class="fee_id"><%=item.id%></td>
                <td><%=companies[item.company_id].company_name%></td>
                <td><%=item.item_name%></td>
+               <td><%=item.code%></td>
                <td><%=item.print_number%></td>
                <% if(item.issuer_id) { %>
                  <td><%=issuers[item.issuer_id].issuer_name%></td>
