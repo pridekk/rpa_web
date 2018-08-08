@@ -53,27 +53,27 @@
 
         </div>
         <div class="row">
-          <div class="input-field col s12 l4">
+          <div class="input-field col s12 l5">
             <label for="company_name">금액</label><input type="text" name="price" placeholder="가격"  value="<%=data.price%>" required>
           </div>
           <div class="input-field col s12 l4">
             <label for="company_name">세금</label><input type="text" name="tax" placeholder="세금"  value="<%=data.tax%>" required>
           </div>
-          <div class="input-field col s12 l4">
+          <div class="input-field col s12 l3">
             <label for="company_name">총합계</label><input type="text" name="total_price" placeholder="총금액"    value="<%=data.total_price%>"required>
           </div>
         </div>
         <div class="row">
-          <div class="input-field col s12 l12">
-            <label for="company_name">매칭된 품의</label>
-            <% if(tax_invoice_company) { %>
-              <input type="text" disabled value='<%=tax_invoice_company.invoice_type + " " +tax_invoice_company.company_name +" "+ tax_invoice_company.item_name%>'>
-              <input type="text" disabled value='총합계:<%=tax_invoice_company.total_price%>'>
-            <% } else { %>
-              <input type="text" disabled value=''>
-            <% } %>
-
-          </div>
+          <% if(tax_invoice_company) { %>
+              <div class="input-field col s12 l9">
+                <label >매칭된 품의</label>
+                <input type="text" disabled value='<%=tax_invoice_company.invoice_type + " " +tax_invoice_company.company_name +" "+ tax_invoice_company.item_name%>'>
+              </div>
+              <div class="input-field col s12 l3">
+                <label>합계</label>
+                <input type="text" disabled value='<%=tax_invoice_company.total_price%>'>
+              </div>
+          <% } %>
         </div>
         <div class="row">
           <div class="input-field col s4">

@@ -12,10 +12,22 @@ module.exports = function(app, fs, db, companies_map){
       invoice_type = req.query.invoice_type
       month= req.query.month
       year = req.query.year
+      if(typeof month === "undefined"){
+        let d = new Date()
+        d.setMonth(d.getMonth()-1)
+        month = d.getMonth() + 1
+      }
+      if(typeof year === "undefined"){
+        let d = new Date()
+        d.setMonth(d.getMonth()-1)
+        year = d.getFullYear()
+      }
       req.session.origin = 'monthly_reports'
       req.session.month = month
       req.session.year = year
       req.session.invoice_type = invoice_type
+      console.log("month:", month)
+
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
         db.manyOrNone(`select evidence_date, c_id as id, print_number, tic.company_name, tic.item_name, total_price, diff_price,tic.filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
@@ -53,8 +65,8 @@ module.exports = function(app, fs, db, companies_map){
 
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select c_id as id, tic.company_name, tic.item_name, evidence_date, print_number,price,tax, total_price, diff_price,tid, tic.filepath as ti_file, mr.id as mid, mr.filepath as mr_file
-          from ( Select evidence_date, tc.id as c_id, ti.id as tid, ti.price, ti.tax, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, ti.total_price as total_price,
+        db.manyOrNone(`select c_id as id, tic.company_name, tic.item_name, evidence_date, bill_year,bill_month, print_number,price,tax, total_price, diff_price,tid, tic.filepath as invoice_file, mr.id as mid, mr.filepath as maintain_file
+          from ( Select evidence_date,bill_year, bill_month, tc.id as c_id, ti.id as tid, ti.price, ti.tax, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, ti.total_price as total_price,
             (ti.total_price - tc.total_price ) as diff_price, company_number, filepath from items as tc left outer join
             (select * from tax_invoices where confirmed = true and bill_month like '%${month}%' and bill_year like '%${year}%') as ti
             on tc.id = ti.tax_invoice_company_id where tc.invoice_type = '${invoice_type}') as tic
@@ -74,13 +86,13 @@ module.exports = function(app, fs, db, companies_map){
                 let zip = new adm_zip()
                 zip.addLocalFile("maintenance.csv")
                 for(var i =0,len=data.length;i<len;i++){
-                  if(data[i].mr_file){
-                    filepath = __dirname + "/../public/maintain_reports/" + data[i].mr_file.split('\\').pop()
+                  if(data[i].maintain_file){
+                    filepath = __dirname + "/../public/maintain_reports/" + data[i].maintain_file.split('\\').pop()
                     console.log(filepath)
                     zip.addLocalFile(filepath)
                   }
-                  if(data[i].ti_file){
-                    filepath = __dirname + "/../public/invoices/" + data[i].ti_file.split('\\').pop()
+                  if(data[i].invoice_file){
+                    filepath = __dirname + "/../public/invoices/" + data[i].invoice_file.split('\\').pop()
                     console.log(filepath)
                     zip.addLocalFile(filepath)
                   }
