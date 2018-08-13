@@ -50,6 +50,29 @@ module.exports = function(app, fs, db){
 
   })
 
+  app.get('/similarity2', (req,res) => {
+    let company = req.query.company.trim()
+    let item = req.query.item.replace(/\d+/g, '').trim()
+    let site = req.query.site.trim()
+    console.log(req.query)
+    query_string = `select * from invoice_mappings where company_name = '${company}' and item_name = '${item}' and site = '${site}'`
+    db.oneOrNone(query_string)
+    .then((data) => {
+      console.log(data)
+      if(data.length === 0 ){
+        var matches = string_similarity.findBestMatch(company+"," +item + "," + site, csvData)
+        console.log(matches.bestMatch)
+        res.json({bestMatch: matches.bestMatch.target, ratio: matches.bestMatch.rating*100, id: csvDataIndex[matches.bestMatch.target]})
+      }else{
+
+        res.json({bestMatch: `${data.company_name}, ${data.item_name}` , ratio: 100, id: data.item_id})
+      }
+
+    })
+
+
+  })
+
   app.get('/similarity/company/:company_name', (req,res) => {
 
     let company = req.params.company_name.replace("주식회사").replace("(주)").trim()
