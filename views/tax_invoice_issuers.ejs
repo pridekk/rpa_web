@@ -24,7 +24,13 @@
         <h4 class="card-title">세금계산서 발행 Site</h4>
         <p>세금계산서를 발행해주는 site로 outlook에서 수신할 세금계산서 대상을 선택하기 위해 사용됩니다.</p>
       </div>
+
     </div>
+    <div class="row">
+      <div class="col right">
+        <a class="btn float" href="/tax_invoice_issuers/new">신규등록</a>
+      </div>
+  </div>
 
 
     <table class="example">
@@ -56,10 +62,6 @@
 
 <script type="text/javascript">
 
-  $(() =>  {
-    $('tbody').sortable();
-    $( "tbody" ).disableSelection();
- })
 </script>
   <% include ./footer.ejs %>
 </body>
