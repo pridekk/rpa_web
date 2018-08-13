@@ -245,8 +245,8 @@ module.exports = function(app, fs, db,upload, companies_map){
       //console.log(req)
       let company = req.body;
       console.log(company)
-      query_string = `insert into tax_invoices (company, tax_invoice_company_id, item_name, bill_year, bill_month, evidence_date, price, tax, total_price, filepath, confirmed ) Values (
-         '${company.company_name}',${company.tax_invoice_company_id},'${company.item_name}','${company.bill_year}',
+      query_string = `insert into tax_invoices (company, tax_invoice_company_id, item_name,item_name_alias, bill_year, bill_month, evidence_date, price, tax, total_price, filepath, confirmed ) Values (
+         '${company.company_name}',${company.tax_invoice_company_id},'${company.item_name}','${company.item_name.replace(/d+/g,'.').trim()}','${company.bill_year}',
          '${company.bill_month}', '${company.evidence_date}',${company.price},${company.tax},${company.total_price},'${req.file.filename}',`;
       if(company.confirmed === 'on'){
         query_string = query_string + "true)"
