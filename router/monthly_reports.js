@@ -30,23 +30,41 @@ module.exports = function(app, fs, db, companies_map){
 
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select evidence_date, c_id as id, print_number, tic.company_name, tic.item_name, total_price, diff_price,tic.filepath as ti_file,tid, mr.id as mid, mr.filepath as mr_file, company_number
-          from ( Select evidence_date,tc.id as c_id, ti.id as tid, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, tc.total_price as total_price,
-	          (ti.total_price - tc.total_price ) as diff_price, company_number, filepath from items as tc left outer join
-            (select * from tax_invoices where confirmed = true and bill_month like '%${month}%' and bill_year like '%${year}%') as ti
-            on tc.id = ti.tax_invoice_company_id where tc.invoice_type = '${invoice_type}') as tic
-            left outer join (select * from maintain_reports where confirmed = true and month like '%${month}%' and year like '%${year}%') as mr on tic.c_id = mr.tax_invoice_company_id order by print_number`)
-        .then((data) => {
-          console.log(data[1])
-          console.log(companies_map[data[1].id])
-          res.render('monthly_reports', {
-            title: invoice_type,
-            data: data,
-            invoice_type: invoice_type,
-            year: year,
-            companies_map: companies_map,
-            month: month
-          });
+        db.manyOrNone(`select items.id as item_id, * from items left join companies on items.company_id = companies.id`)
+        .then((items) => {
+          for(var i =0; i< items.length;i++){
+            items[i].invoices = []
+            items[i].maintain_reports = []
+          }
+          db.manyOrNone(`select * from tax_invoices where bill_month like '%${month}%' and bill_year like '%${year}%' and confirmed = true order by id `)
+          .then((invoices) => {
+            for(var i = 0; i < invoices.length; i++){
+              for(var j = 0;j< items.length;j++){
+                if (invoices[i].tax_invoice_company_id === items[j].item_id){
+                  items[j].invoices.push(invoices[i])
+                }
+              }
+            }
+            db.manyOrNone(`select * from maintain_reports where month like '%${month}%' and year like '%${year}%' and confirmed = true order by id desc`)
+            .then((maintain_reports) => {
+              for(var i = 0; i < maintain_reports.length; i++){
+                for(var j = 0;j< items.length;j++){
+                  if (maintain_reports[i].tax_invoice_company_id === items[j].item_id){
+                    items[j].maintain_reports.push(maintain_reports[i])
+                  }
+                }
+
+              }
+              console.log(items.length)
+              res.render('monthly_reports', {
+                title: invoice_type,
+                items: items,
+                invoice_type: invoice_type,
+                year: year,
+                month: month
+              });
+            })
+          })
         })
         .catch( (err) => {
           console.log("Error: ", err);
@@ -65,12 +83,9 @@ module.exports = function(app, fs, db, companies_map){
 
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select c_id as id, tic.company_name, tic.item_name, evidence_date, bill_year,bill_month, print_number,price,tax, total_price, diff_price,tid, tic.filepath as invoice_file, mr.id as mid, mr.filepath as maintain_file
-          from ( Select evidence_date,bill_year, bill_month, tc.id as c_id, ti.id as tid, ti.price, ti.tax, tc.print_number as print_number , tc.company_name as company_name, tc.item_name as item_name, ti.total_price as total_price,
-            (ti.total_price - tc.total_price ) as diff_price, company_number, filepath from items as tc left outer join
-            (select * from tax_invoices where confirmed = true and bill_month like '%${month}%' and bill_year like '%${year}%') as ti
-            on tc.id = ti.tax_invoice_company_id where tc.invoice_type = '${invoice_type}') as tic
-            left outer join (select * from maintain_reports where confirmed = true and month like '%${month}%' and year like '%${year}%') as mr on tic.c_id = mr.tax_invoice_company_id order by print_number`)
+        db.manyOrNone(`select * from (select * from (select items.id as item_id, * from items left join companies on items.company_id = companies.id where invoice_type='${invoice_type}') as items left join
+          (select  tax_invoice_company_id, filepath as maintain_file from maintain_reports where month like '%${month}%' and year like '%${year}%' and confirmed = true) as mr on items.item_id = mr.tax_invoice_company_id) as items left join
+          (select evidence_date,tax_invoice_company_id, filepath as invoice_file from tax_invoices where bill_month like '%${month}%' and bill_year like '%${year}%' and confirmed = true) as iv on items.item_id = iv.tax_invoice_company_id order by print_number`)
         .then((data) => {
           let json = JSON.stringify(data)
           // let csv = json2csv.parse(json, {fields:fields})

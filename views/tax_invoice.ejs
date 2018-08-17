@@ -15,6 +15,11 @@
           <div class="input-field col s12 l5">
             <label for="company_name">업체명</label><input type="text" name="company_name" placeholder="업체명"  disabled value="<%=data.company%>"required>
           </div>
+          <div class="input-field col s12 l5">
+            <label>발행 Site</label>
+            <input type="text" name="site" placeholder="발행site"    value="<%=data.site%>" disabled>
+
+          </div>
 
         </div>
         <div class="row">
@@ -84,18 +89,17 @@
                <input type="hidden" name="invoice_type" id="invoice_type" />
           </div>
           <div class="input-field col s4">
-              <select id="input-2">
+              <select name="company_id" id="input-2">
                 <option value="" disabled selected>Choose your option</option>
               </select>
               <label>회사선택</label>
-              <input type="hidden" name="invoice_company_name" id="invoice_company_name" />
+
           </div>
           <div class="input-field col s4">
-              <select id="input-3">
+              <select name="item_id" id="input-3">
                 <option value="" disabled selected>Choose your option</option>
               </select>
               <label>품의선택</label>
-              <input type="hidden" name="invoice_item_name" id="invoice_item_name" />
           </div>
 
         </div>
@@ -148,7 +152,6 @@ $(document).ready(function(){
 
     $("#input-1").change( function() {
       var str = "";
-      $('#invoice_type').val($("#input-1 option:selected").text());
       $("#input-1 option:selected").each(function(){
         str += $(this).text();
       });
@@ -163,7 +166,7 @@ $(document).ready(function(){
           $("#input-2").append("<option value='' disabled selected>Choose your option</option>")
           $.each(data, function(idx,item){
 
-            $("#input-2").append($('<option>', { value: idx, text: item["company_name"]}));
+            $("#input-2").append($('<option>', { value: item["id"], text: item["company_name"]}));
           })
 
           $("#input-2").formSelect();
@@ -176,23 +179,22 @@ $(document).ready(function(){
       console.log("test")
       var str1 = ""
       var str2 = ""
-      $('#invoice_company_name').val($("#input-2 option:selected").text());
       $("#input-1 option:selected").each(function(){
         str1 += $(this).text();
       });
       $("#input-2 option:selected").each(function(){
-        str2 += $(this).text();
+        str2 += $(this).val();
       });
       $.ajax({
         type:'GET',
-        url: "/apis/company_names?invoice_type="+str1+"&company_name="+str2,
+        url: "/apis/company_names?invoice_type="+str1+"&company_id="+str2,
         data: null,
         success: function(data){
           $("#input-3").empty();
           $("#input-3").append("<option value='' disabled selected>Choose your option</option>")
           $.each(data, function(idx,item){
 
-            $("#input-3").append($('<option>', { value: idx, text: item["item_name"]}));
+            $("#input-3").append($('<option>', { value: item["id"], text: item["item_name"]}));
           })
 
           $("#input-3").formSelect();
@@ -200,11 +202,7 @@ $(document).ready(function(){
       })
 
     })
-    $("#input-3").change( function() {
-        $('#invoice_item_name').val($("#input-3 option:selected").text());
 
-
-    })
 
   })
     // $("#input-1").

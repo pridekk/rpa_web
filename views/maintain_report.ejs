@@ -75,21 +75,19 @@
         <div class="row">
           <label><h4>품의변경</h4></label>
           <div class="input-field col s12 l6">
-              <select id="input-2">
+              <select name="company_id" id="input-2">
                 <% for(var i =0 ;i<companies.length;i++) { %>
-                    <option value="<%=i%>"><%=companies[i].company_name%></option>
+                    <option value="<%=companies[i].id%>"><%=companies[i].company_name%></option>
                   <% } %>
                 <option value="" disabled selected>Choose your option</option>
               </select>
               <label>회사선택</label>
-              <input type="hidden" name="company_name" id="company_name" >
           </div>
           <div class="input-field col s12 l6">
-              <select id="input-3">
+              <select name="item_id" id="input-3">
                 <option value="" disabled selected>Choose your option</option>
               </select>
               <label>품의선택</label>
-              <input type="hidden" name="item_name" id="item_name" >
           </div>
         </div>
 
@@ -132,16 +130,16 @@
       $('select').formSelect();
 
       $("#input-2").change( function() {
-        console.log("test")
+        console.log($("#input-2 option:selected").val())
         var str2 = ""
-        $('#company_name').val($("#input-2 option:selected").text());
-          console.log($('#company_name').val())
         $("#input-2 option:selected").each(function(){
-          str2 += $(this).text();
+          str2 += $(this).val();
         });
+
+
         $.ajax({
           type:'GET',
-          url: "/apis/company_names?invoice_type=maintenance&company_name="+str2,
+          url: "/apis/company_names?invoice_type=maintenance&company_id="+str2,
           data: null,
           success: function(data){
 
@@ -149,7 +147,7 @@
             $("#input-3").append("<option value='' disabled selected>Choose your option</option>")
             $.each(data, function(idx,item){
 
-              $("#input-3").append($('<option>', { value: idx, text: item["item_name"]}));
+              $("#input-3").append($('<option>', { value: item["id"], text: item["item_name"]}));
             })
 
             $("#input-3").formSelect();
@@ -157,10 +155,7 @@
         })
 
       })
-      $("#input-3").change( function() {
-          $('#item_name').val($("#input-3 option:selected").text());
 
-      })
     });
   </script>
 </body>

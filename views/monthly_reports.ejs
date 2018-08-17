@@ -70,47 +70,56 @@
 
       </thead>
       <tbody>
-      <% for(var i = 0, len = data.length; i < len; i++) { item = data[i]; %>
-        <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
+        <% console.log(items) %>
+      <% for(var i = 0; i <  items.length; i++) { item = items[i];  console.log(item.invoice_type); %>
+        <% if(item.invoice_type === invoice_type){ rows = Math.max(item.invoices.length, item.maintain_reports.length, 1) %>
+        <tr  <% if(i%2 === 0) { %> class="striped" <% } %> >
+          <td rowspan="<%=rows%>"><%=item.print_number%></td>
+          <td rowspan="<%=rows%>"><%=item.company_name%></td>
+          <td rowspan="<%=rows%>"><%=item.company_number%></td>
+          <td rowspan="<%=rows%>"><%=item.item_name%></td>
+          <td rowspan="<%=rows%>"><%=item.total_price%></td>
 
-          <td><%=item.print_number%></td>
-          <td><%=item.company_name%></td>
-
-          <% if (item.company_id && companies_map[item.company_id.toString()]){%>
-            <td><%=companies_map[item.company_id.toString()].company_number%></td>
-          <% } else { %>
-            <td></td>
-          <% } %>
-
-          <td><%=item.item_name%></td>
-          <td><%=item.total_price%></td>
-          <td><%=item.diff_price%></td>
-          <td><%=item.evidence_date%></td>
-          <td>
-            <% if (item.tid)  { %>
-              <a class="Popup" href="/tax_invoice/<%=item.tid%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a>
-
-            <% } else { %>
-
-              <a href="/tax_invoices/new?item_id=<%=item.id%>&invoice_type=<%=invoice_type%>&company_name=<%=item.company_name%>&item_name=<%=item.item_name%>&total_price=<%=item.total_price%>&bill_year=<%=year%>&bill_month=<%=month%>"><i class="material-icons">add</i></a>
-            <% } %>
-
-          </td>
-          <% if(invoice_type === "maintenance") { %>
+          <% if (item.invoices.length>0) { %>
+            <td><%=item.total_price - item.invoices[0].total_price%></td>
+            <td><%=item.invoices[0].evidence_date%></td>
+            <td><a class="Popup" href="/tax_invoice/<%=item.invoices[0].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></td>
+          <%} else { %>
+            <td colspan="2"></td>
             <td>
-              <% if (item.mid)  { %>
-                <a class="Popup" href="/maintain_report/<%=item.mid%>?from=monthly_reports" ><i class="material-icons">picture_as_pdf</i></a>
-              <% } else { %>
-                <a href="/maintain_reports/new?item_id=<%=item.id%>&company_name=<%=item.company_name%>&item_name=<%=item.item_name%>&bill_year=<%=year%>&bill_month=<%=month%>"><i class="material-icons">add</i></a>
-              <% } %>
-
+              <a href="/tax_invoices/new?item_id=<%=item.item_id%>&invoice_type=<%=invoice_type%>&company_name=<%=item.company_name%>&item_name=<%=item.item_name%>&total_price=<%=item.total_price%>&bill_year=<%=year%>&bill_month=<%=month%>"><i class="material-icons">add</i></a>
             </td>
+
+          <%}%>
+
+          <% if(invoice_type === "maintenance") { %>
+            <% if (item.maintain_reports.length>0) { %>
+              <td><a class="Popup" href="/maintain_report/<%=item.maintain_reports[0].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></td>
+            <%} else { %>
+                <td>
+                  <a href="/maintain_reports/new?item_id=<%=item.item_id%>&company_name=<%=item.company_name%>&item_name=<%=item.item_name%>&bill_year=<%=year%>&bill_month=<%=month%>"><i class="material-icons">add</i></a>
+                </td>
+            <%}%>
+          <% } %></tr>
+          <% for(var j = 1; j<rows; j++){ %>
+            <tr>
+            <% if(item.invoices.length > j){ %>
+              <td><%=item.total_price - item.invoices[j].total_price%></td>
+              <td><%=item.invoices[j].evidence_date%></td>
+              <td><a class="Popup" href="/tax_invoice/<%=item.invoices[j].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></div></td>
+            <%} else { %>
+              <td colspan="3" ></td>
+            <% }%>
+            <% if(item.maintain_reports.length > j){ %>
+              <td><a class="Popup" href="/maintain_report/<%=item.maintain_reports[j].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></div></td>
+            <%} else { %>
+              <td></td>
+            <% }%>
+          </tr>
+
           <% } %>
 
-
-
-        </tr>
-      <% } %>
+      <% } }%>
       </tbody>
     </table>
   </div>

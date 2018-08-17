@@ -50,24 +50,24 @@
          <tbody>
          <% for(var i = 0, len = maintenance.length; i < len; i++) { item = maintenance[i]; %>
          <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
-           <td class="maintenance_id"><%=item.id%></td>
-           <td><%=companies[item.company_id].company_name%></td>
+           <td class="maintenance_id"><%=item.item_id%></td>
+           <td><%=item.company_name%></td>
            <td><%=item.item_name%></td>
            <td><%=item.code%></td>
            <td><%=item.print_number%></td>
            <% if(item.issuer_id) { %>
-             <td><%=issuers[item.issuer_id].issuer_name%></td>
+             <td><%=item.issuer_name%></td>
            <% }else{%>
              <td></td>
            <% } %>
            <td><%=item.total_price%></td>
            <td><% if(item.report_filename) {%>
-                <a class="waves-effect waves-light " href=/invoices/<%=item.report_filename%>><i class="material-icons" target="_blank">picture_as_pdf</i></a>
+                <a class="waves-effect waves-light " href=/items/<%=item.report_filename%>><i class="material-icons" target="_blank">picture_as_pdf</i></a>
             <% } else {%>
-              <a class="waves-effect waves-light  modal-trigger" href="#file_modal_<%=item.id%>"><i class="material-icons">file_upload</i></a>
-              <div id="file_modal_<%=item.id%>" class="modal">
+              <a class="waves-effect waves-light  modal-trigger" href="#file_modal_<%=item.item_id%>"><i class="material-icons">file_upload</i></a>
+              <div id="file_modal_<%=item.item_id%>" class="modal">
                 <div class="modal-content">
-                  <form action="/apis/fileupload?type=company&id=<%=item.id%>" enctype="multipart/form-data" method="post">
+                  <form action="/apis/fileupload?type=company&id=<%=item.item_id%>" enctype="multipart/form-data" method="post">
                     <div class = "row">
                        <label>품의서첨부</label>
                        <div class = "file-field input-field">
@@ -91,10 +91,10 @@
             <% } %>
            </td>
            <td>
-             <a href="/item/<%=item.id%>" ><i class="material-icons">edit</i></a>
+             <a href="/item/<%=item.item_id%>" ><i class="material-icons">edit</i></a>
            </td>
            <td>
-              <a class="delete" href="/items/delete/<%=item.id%>"  data-method="delete" onclick="return confirm('정말지우시겠습니까?');" rel="nofollow"><i class="material-icons">delete</a>
+              <a class="delete" href="/items/delete/<%=item.item_id%>"  data-method="delete" onclick="return confirm('정말지우시겠습니까?');" rel="nofollow"><i class="material-icons">delete</a>
            </td>
          </tr>
          <% } %>
@@ -117,25 +117,25 @@
              <tbody>
              <% for(var i = 0, len = fee.length; i < len; i++) { item = fee[i]; %>
              <tr <% if(i%2 === 0) { %> class="striped" <% } %> >
-               <td class="fee_id"><%=item.id%></td>
-               <td><%=companies[item.company_id].company_name%></td>
+               <td class="fee_id"><%=item.item_id%></td>
+               <td><%=item.company_name%></td>
                <td><%=item.item_name%></td>
                <td><%=item.code%></td>
                <td><%=item.print_number%></td>
                <% if(item.issuer_id) { %>
-                 <td><%=issuers[item.issuer_id].issuer_name%></td>
+                 <td><%=item.issuer_name%></td>
                <% }else{%>
                  <td></td>
                <% } %>
 
                <td><%=item.total_price%></td>
                <td><% if(item.report_filename) {%>
-                    <a class="waves-effect waves-light " href=/uploads/<%=item.report_filename%>><i class="material-icons" target="_blank">picture_as_pdf</i></a>
+                    <a class="waves-effect waves-light " href=/items/<%=item.report_filename%>><i class="material-icons" target="_blank">picture_as_pdf</i></a>
                 <% } else {%>
-                  <a class="waves-effect waves-light  modal-trigger" href="#file_modal_<%=item.id%>"><i class="material-icons">file_upload</i></a>
-                  <div id="file_modal_<%=item.id%>" class="modal">
+                  <a class="waves-effect waves-light  modal-trigger" href="#file_modal_<%=item.item_id%>"><i class="material-icons">file_upload</i></a>
+                  <div id="file_modal_<%=item.item_id%>" class="modal">
                     <div class="modal-content">
-                      <form action="/apis/fileupload?type=company&id=<%=item.id%>" enctype="multipart/form-data" method="post">
+                      <form action="/apis/fileupload?type=company&id=<%=item.item_id%>" enctype="multipart/form-data" method="post">
                         <div class = "row">
                            <label>품의서첨부</label>
                            <div class = "file-field input-field">
@@ -159,10 +159,10 @@
                 <% } %>
                </td>
                <td>
-                 <a href="/tax_invoice_company/<%=item.id%>" ><i class="material-icons">edit</i></a>
+                 <a href="/tax_invoice_company/<%=item.item_id%>" ><i class="material-icons">edit</i></a>
                </td>
                 <td>
-                  <a class="delete" href="/items/delete/<%=item.id%>"  data-method="delete" onclick="return confirm('정말지우시겠습니까?');"  rel="nofollow"><i class="material-icons">delete</a>
+                  <a class="delete" href="/items/delete/<%=item.item_id%>"  data-method="delete" onclick="return confirm('정말지우시겠습니까?');"  rel="nofollow"><i class="material-icons">delete</a>
                 </td>
              </tr>
              <% } %>

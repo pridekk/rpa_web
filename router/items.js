@@ -1,33 +1,8 @@
 // var popupS = require('popups');
 module.exports = function(app, fs, db, upload){
-  var companies_map = {}
-  var issuers_map = {}
-  var companies_list = []
-  var issuers_list = []
-  db.manyOrNone("Select * from companies order by company_name")
-  .then((data) => {
-    for(var i =0, len=data.length; i <len;i++){
-        companies_map[data[i].id] = data[i]
-        companies_list.push(data[i])
-      }
-  })
-  .catch( (err) => {
-    //res.send(err)
-    console.log("Error: ", err);
-  });
-  db.manyOrNone("Select * from tax_invoice_issuers order by issuer_name")
-  .then((data) => {
-    for(var i =0, len=data.length; i <len;i++){
-        issuers_map[data[i].id] = data[i]
-        issuers_list.push(data[i])
-      }
-  })
-  .catch( (err) => {
-    //res.send(err)
-    console.log("Error: ", err);
-  });
+
   app.get('/items', (req,res) => {
-    db.manyOrNone("Select * from items where disabled = false order by invoice_type, print_number")
+    db.manyOrNone("select * from tax_invoice_issuers as issuers right join (Select items.id as item_id, * from items join companies as cp on items.company_id = cp.id where disabled = false ) as items on items.issuer_id = issuers.id order by invoice_type, print_number")
     .then((data) => {
       maintenance = []
       fee = []
@@ -43,8 +18,6 @@ module.exports = function(app, fs, db, upload){
         title: "세금계산서 발행 업체 리스트",
         maintenance: maintenance,
         fee: fee,
-        companies: companies_map,
-        issuers: issuers_map,
         expressFlash: req.flash('success')
       });
     })
@@ -67,17 +40,36 @@ module.exports = function(app, fs, db, upload){
   app.get('/item/:id', (req,res) => {
      console.log(req.params.id)
      invoice_id = req.params.id
-     db.oneOrNone('select * from items where id = ' + invoice_id)
-     .then((data) => {
-       res.render('item', {title: '업체 수정', item: data, companies:companies_list, issuers: issuers_list})
-     }).catch( (err) => {
-          res.send(err)
-         console.log("Error: ", err);
+     db.manyOrNone("Select * from companies order by company_name")
+     .then((companies) => {
+       db.manyOrNone("Select * from tax_invoice_issuers order by issuer_name")
+       .then((issuers) => {
+         db.oneOrNone('select * from items where id = ' + invoice_id)
+         .then((data) => {
+           res.render('item', {title: '업체 수정', item: data, companies:companies, issuers: issuers})
+         })
+       })
+     }).
+     catch( (err) => {
+        res.send(err)
+        console.log("Error: ", err);
      });
 
   })
   app.get('/items/new', (req,res) => {
-    res.render('new_items', {title: '신규 업체 등록', companies:companies_list, issuers:issuers_list})
+    db.manyOrNone("Select * from companies order by company_name")
+    .then((companies) => {
+      db.manyOrNone("Select * from tax_invoice_issuers order by issuer_name")
+      .then((issuers) => {
+        res.render('new_items', {title: '신규 업체 등록', companies:companies, issuers:issuers})
+      })
+    })
+    .catch( (err) => {
+      res.send(err)
+      console.log("Error: ", err);
+    });
+
+
 
   })
   app.post('/item/:id',upload.single('userfile'), (req,res) => {
@@ -98,6 +90,7 @@ module.exports = function(app, fs, db, upload){
       res.redirect('/items')
     }).catch((err) => {
       //console.error( "등록실패:" ,err);
+      console.log(query_string)
       res.send({result:err});
     });
 
@@ -110,17 +103,18 @@ module.exports = function(app, fs, db, upload){
       console.log(req.file)
       console.log(company);
       if(req.file){
-        query_string = `insert into items (invoice_type, print_number, company_id, item_name, issuer_id, best_match, total_price, report_filename, code ) Values (
-           '${company.invoice_type}',${company.print_number},${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price}, '${req.file.filename}','${company.code}')`;
+        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, best_match, total_price, report_filename, code ) Values (
+           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price}, '${req.file.filename}','${company.code}')`;
         //console.log(query_string);
       }else{
-        query_string = `insert into items (invoice_type, print_number, company_id, item_name, issuer_id, best_match, total_price ,code) Values (
-           '${company.invoice_type}',${company.print_number},${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price},'${company.code}')`;
+        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, best_match, total_price ,code) Values (
+           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price},'${company.code}')`;
       }
       db.none(query_string).then( () => {
         //console.log( "등록성공");
         res.redirect('/items')
       }).catch((err) => {
+        console.log(query_string)
         console.error( "등록실패:" ,err);
         res.send({result:err});
       });

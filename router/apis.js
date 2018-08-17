@@ -3,20 +3,21 @@ module.exports = function(app, fs, db,upload){
 
   app.get('/apis/company_names', (req,res) => {
     invoice_type = req.query.invoice_type
-    company_name = req.query.company_name
-    console.log(invoice_type)
-    console.log(company_name)
-    if(company_name){
-      db.manyOrNone(`Select distinct item_name from items where invoice_type = '${invoice_type}' and company_name = '${company_name}' order by item_name`)
-      .then((data) => {
-        res.send(data);
-        res.end()
-      })
-      .catch( (err) => {
-        console.log("Error: ", err);
-      });
+    company_id = req.query.company_id
+    console.log(req.query)
+
+    if(company_id){
+        db.manyOrNone(`Select distinct * from items where invoice_type = '${invoice_type}' and company_id = ${company_id} order by item_name`)
+        .then((data) => {
+          console.log(data)
+          res.send(data);
+          res.end()
+        })
+        .catch( (err) => {
+          console.log("Error: ", err);
+        });
     }else{
-      db.manyOrNone(`Select distinct company_name from items where invoice_type = '${invoice_type}' order by company_name`)
+      db.manyOrNone(`select * from companies where id in (Select company_id from items where invoice_type = '${invoice_type}') order by company_name`)
       .then((data) => {
         res.send(data);
         res.end()
@@ -25,8 +26,6 @@ module.exports = function(app, fs, db,upload){
         console.log("Error: ", err);
       });
     }
-
-
 
   });
   app.post('/apis/update_company_orders', (req,res) => {

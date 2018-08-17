@@ -80,6 +80,7 @@ db2.manyOrNone("Select * from companies order by company_name")
       companies_map[data[i].id] = data[i]
       companies_list.push(data[i])
     }
+    console.log(companies_map)
 })
 .catch( (err) => {
   //res.send(err)

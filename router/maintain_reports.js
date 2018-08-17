@@ -18,6 +18,7 @@ module.exports = function(app, fs, db, upload){
     if(search){
       query_string = query_string + ` and (company_name like '%${search}%' or item_name like '%${search}%' or subject like '%${search}%')`
     }
+    query_string = query_string + ' order by id desc'
 
     db.manyOrNone(query_string)
     .then((data) => {
@@ -147,7 +148,7 @@ module.exports = function(app, fs, db, upload){
        console.log(data)
        db.oneOrNone(`select * from items where id = ${data.tax_invoice_company_id}`)
        .then((data2) =>{
-         db.manyOrNone(`select distinct company_name from items where invoice_type = 'maintenance' order by company_name`)
+         db.manyOrNone(`select * from companies where id in (select id from items where invoice_type = 'maintenance') order by company_name`)
          .then((data3) => {
            res.render('maintain_report', {
              title: "유지보수확인서",
@@ -175,17 +176,11 @@ module.exports = function(app, fs, db, upload){
     } else {
       report.confirmed = false
     }
-    if(report.company_name && report.item_name){
-      let query_string = `select id from items where company_name = '${report.company_name}' and item_name ='${report.item_name}'`
-      console.log(query_string)
-      db.oneOrNone(query_string)
-      .then((data) => {
-        console.log(data)
-        db.none(`update maintain_reports set tax_invoice_company_id = ${data.id}, month= '${report.bill_month}',year= '${report.bill_year}', confirmed= ${report.confirmed}   where id = ${invoice_id}`)
-        .then(() => {
-          req.flash('success', '수정성공')
-          res.redirect('back')
-        })
+    if(report.item_id){
+      db.none(`update maintain_reports set tax_invoice_company_id = ${report.item_id}, month= '${report.bill_month}',year= '${report.bill_year}', confirmed= ${report.confirmed}   where id = ${invoice_id}`)
+      .then(() => {
+        req.flash('success', '수정성공')
+        res.redirect('back')
       })
       .catch( (err) => {
         console.log("Error: ", err);

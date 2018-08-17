@@ -41,6 +41,7 @@ module.exports = function(app, fs, db,upload, companies_map){
     if(search){
       query_string = query_string + ` and (company like '%${search}%' or item_name like '%${search}%')`
     }
+    query_string = query_string + ' order by id desc'
     console.log(query_string)
     db.manyOrNone(query_string)
     .then((data) => {
@@ -161,7 +162,7 @@ module.exports = function(app, fs, db,upload, companies_map){
      db.oneOrNone('select * from tax_invoices where id = ' + invoice_id)
      .then((data) => {
        console.log(data)
-       db.oneOrNone(`select * from items where id = ${data.tax_invoice_company_id}`)
+       db.oneOrNone(`select items.id as id, * from items left join companies on items.company_id = companies.id where items.id = ${data.tax_invoice_company_id}`)
        .then((data2) =>{
          console.log(data2)
          db.manyOrNone('select distinct invoice_type from items')
@@ -178,7 +179,6 @@ module.exports = function(app, fs, db,upload, companies_map){
              data: data ,
              tax_invoice_company: data2,
              invoice_type: data3,
-             companies_map: companies_map
            });
          });
        });
@@ -198,32 +198,22 @@ module.exports = function(app, fs, db,upload, companies_map){
     } else{
       invoice.confirmed = false
     }
-    if(invoice.invoice_type && invoice.invoice_company_name && invoice.invoice_item_name ){
-      let query_string = `select id from items where invoice_type = '${invoice.invoice_type}'  and company_name = '${invoice.invoice_company_name}' and item_name ='${invoice.invoice_item_name}'`
-      console.log(query_string)
-      db.oneOrNone(query_string)
-      .then((data) => {
-        console.log(data)
-        db.none(`update tax_invoices set evidence_date = '${invoice.evidence_date}',tax_invoice_company_id = ${data.id},  price = ${invoice.price}, tax= ${invoice.tax}, total_price= ${invoice.total_price},
-          bill_year= '${invoice.bill_year}', bill_month= '${invoice.bill_month}', company_number = '${invoice.company_number}', confirmed = ${invoice.confirmed} where id = ${invoice_id}`)
-        .then(() => {
-           req.flash('success', '수정 완료')
-          res.redirect('back')
-        })
-        .catch( (err) => {
-          console.log("Error: ", err);
-          res.send(err)
-          res.end()
-        });
+    if(invoice.item_id){
+      db.none(`update tax_invoices set evidence_date = '${invoice.evidence_date}',tax_invoice_company_id = ${invoice.item_id},  price = ${invoice.price}, tax= ${invoice.tax}, total_price= ${invoice.total_price},
+        bill_year= '${invoice.bill_year}', bill_month= '${invoice.bill_month}', confirmed = ${invoice.confirmed} where id = ${invoice_id}`)
+      .then(() => {
+         req.flash('success', '수정 완료')
+        res.redirect('back')
       })
       .catch( (err) => {
         console.log("Error: ", err);
         res.send(err)
         res.end()
       });
+
     }else{
       db.none(`update tax_invoices set evidence_date = '${invoice.evidence_date}', price = ${invoice.price}, tax= ${invoice.tax}, total_price= ${invoice.total_price},
-        bill_year= ${invoice.bill_year}, bill_month= ${invoice.bill_month} , confirmed = ${invoice.confirmed} , company_number = '${invoice.company_number}' where id = ${invoice_id}`)
+        bill_year= ${invoice.bill_year}, bill_month= ${invoice.bill_month} , confirmed = ${invoice.confirmed}  where id = ${invoice_id}`)
       .then(() => {
          req.flash('success', '수정 완료')
          res.redirect('back')
@@ -260,6 +250,7 @@ module.exports = function(app, fs, db,upload, companies_map){
         db.manyOrNone(query_string).then((data2) => {
           res.redirect(`/monthly_reports?invoice_type=${company.invoice_type}&year=${company.bill_year}&month=${company.bill_month}`)
         }).catch((err) => {
+          cosole.log(query_string)
           console.error( "등록실패:" ,err);
           res.send({result:err});
           res.end()
