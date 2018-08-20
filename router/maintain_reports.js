@@ -146,7 +146,7 @@ module.exports = function(app, fs, db, upload){
      db.oneOrNone('select * from maintain_reports where id = ' + invoice_id)
      .then((data) => {
        console.log(data)
-       db.oneOrNone(`select * from items where id = ${data.tax_invoice_company_id}`)
+       db.oneOrNone(`select items.id as id, * from items left join companies on items.company_id = companies.id where items.id = ${data.tax_invoice_company_id}`)
        .then((data2) =>{
          db.manyOrNone(`select * from companies where id in (select id from items where invoice_type = 'maintenance') order by company_name`)
          .then((data3) => {
