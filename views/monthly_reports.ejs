@@ -60,7 +60,8 @@
         <th>회사명</th>
         <th>사업자번호</th>
         <th>품목</th>
-        <th>총금액</th>
+        <th>품의총금액</th>
+        <th>계산서총금액</th>
         <th>차액</th>
         <th>증빙일</th>
         <th>세금계산서</th>
@@ -78,14 +79,15 @@
           <td rowspan="<%=rows%>"><%=item.company_name%></td>
           <td rowspan="<%=rows%>"><%=item.company_number%></td>
           <td rowspan="<%=rows%>"><%=item.item_name%></td>
-          <td rowspan="<%=rows%>"><%=item.total_price%></td>
+          <td rowspan="<%=rows%>"><%=Number(item.total_price).toLocaleString()%></td>
 
           <% if (item.invoices.length>0) { %>
-            <td><%=item.total_price - item.invoices[0].total_price%></td>
+            <td><%=Number(item.invoices[0].total_price).toLocaleString()%></td>
+            <td><%=Number(item.total_price - item.invoices[0].total_price).toLocaleString()%></td>
             <td><%=item.invoices[0].evidence_date%></td>
             <td><a class="Popup" href="/tax_invoice/<%=item.invoices[0].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></td>
           <%} else { %>
-            <td colspan="2"></td>
+            <td colspan="3"></td>
             <td>
               <a href="/tax_invoices/new?item_id=<%=item.item_id%>&invoice_type=<%=invoice_type%>&company_name=<%=item.company_name%>&item_name=<%=item.item_name%>&total_price=<%=item.total_price%>&bill_year=<%=year%>&bill_month=<%=month%>"><i class="material-icons">add</i></a>
             </td>
@@ -104,11 +106,12 @@
           <% for(var j = 1; j<rows; j++){ %>
             <tr>
             <% if(item.invoices.length > j){ %>
+              <td><%=item.invoices[j].total_price%></td>
               <td><%=item.total_price - item.invoices[j].total_price%></td>
               <td><%=item.invoices[j].evidence_date%></td>
               <td><a class="Popup" href="/tax_invoice/<%=item.invoices[j].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></div></td>
             <%} else { %>
-              <td colspan="3" ></td>
+              <td colspan="4" ></td>
             <% }%>
             <% if(item.maintain_reports.length > j){ %>
               <td><a class="Popup" href="/maintain_report/<%=item.maintain_reports[j].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></div></td>

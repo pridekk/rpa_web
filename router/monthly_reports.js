@@ -30,7 +30,7 @@ module.exports = function(app, fs, db, companies_map){
 
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select items.id as item_id, * from items left join companies on items.company_id = companies.id`)
+        db.manyOrNone(`select items.id as item_id, * from items left join companies on items.company_id = companies.id where items.disabled = false order by print_number`)
         .then((items) => {
           for(var i =0; i< items.length;i++){
             items[i].invoices = []
@@ -83,7 +83,7 @@ module.exports = function(app, fs, db, companies_map){
 
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select * from (select * from (select items.id as item_id, * from items left join companies on items.company_id = companies.id where invoice_type='${invoice_type}') as items left join
+        db.manyOrNone(`select * from (select * from (select items.id as item_id, * from items left join companies on items.company_id = companies.id where invoice_type='${invoice_type}' and disabled = false ) as items left join
           (select  tax_invoice_company_id, filepath as maintain_file from maintain_reports where month like '%${month}%' and year like '%${year}%' and confirmed = true) as mr on items.item_id = mr.tax_invoice_company_id) as items left join
           (select evidence_date,tax_invoice_company_id, filepath as invoice_file from tax_invoices where bill_month like '%${month}%' and bill_year like '%${year}%' and confirmed = true) as iv on items.item_id = iv.tax_invoice_company_id order by print_number`)
         .then((data) => {
