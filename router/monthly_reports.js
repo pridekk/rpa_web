@@ -83,9 +83,9 @@ module.exports = function(app, fs, db, companies_map){
 
       console.log(req.query)
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
-        db.manyOrNone(`select * from (select * from (select items.id as item_id, * from items left join companies on items.company_id = companies.id where invoice_type='${invoice_type}' and disabled = false ) as items left join
+        db.manyOrNone(`select item_id,company_name, item_name, bill_year, bill_month, print_number, price,tax, invoice_total_price, maintain_file, invoice_file, evidence_date from (select * from (select items.id as item_id, * from items left join companies on items.company_id = companies.id where invoice_type='${invoice_type}' and disabled = false ) as items left join
           (select  tax_invoice_company_id, filepath as maintain_file from maintain_reports where month like '%${month}%' and year like '%${year}%' and confirmed = true) as mr on items.item_id = mr.tax_invoice_company_id) as items left join
-          (select evidence_date,tax_invoice_company_id, filepath as invoice_file from tax_invoices where bill_month like '%${month}%' and bill_year like '%${year}%' and confirmed = true) as iv on items.item_id = iv.tax_invoice_company_id order by print_number`)
+          (select bill_year, bill_month, price, tax, total_price as invoice_total_price, evidence_date,tax_invoice_company_id, filepath as invoice_file from tax_invoices where bill_month like '%${month}%' and bill_year like '%${year}%' and confirmed = true) as iv on items.item_id = iv.tax_invoice_company_id order by print_number`)
         .then((data) => {
           let json = JSON.stringify(data)
 
