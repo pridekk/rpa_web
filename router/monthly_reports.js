@@ -88,9 +88,7 @@ module.exports = function(app, fs, db, companies_map){
           (select evidence_date,tax_invoice_company_id, filepath as invoice_file from tax_invoices where bill_month like '%${month}%' and bill_year like '%${year}%' and confirmed = true) as iv on items.item_id = iv.tax_invoice_company_id order by print_number`)
         .then((data) => {
           let json = JSON.stringify(data)
-          // let csv = json2csv.parse(json, {fields:fields})
-          // console.log(json)
-          // console.log(csv)
+
           jsonexport(data, (err,csv) => {
             if(err) return console.log(err)
             // console.log(csv)
@@ -114,7 +112,8 @@ module.exports = function(app, fs, db, companies_map){
 
                 }
                 zip.writeZip( __dirname + "/../public/maintain_reports/" + "test.zip")
-                res.download( __dirname + "/../public/maintain_reports/" + "test.zip", "down.zip", (err) =>{
+                filename = `invoices_${new Date().format('yyyy_mm_dd_HH_MM_ss')}.zip`
+                res.download( __dirname + "/../public/maintain_reports/" + "test.zip", filename, (err) =>{
                   if(err){
                     res.send(err)
                   } else {
