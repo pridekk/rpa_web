@@ -5,7 +5,7 @@ var session = require('express-session');
 var method_override = require('method-override')
 var fs = require('fs')
 var pgp = require('pg-promise')();
-var db = pgp("postgres://rpa:rpa2018.@localhost/rpa");
+
 var db2 = pgp("postgres://general_affairs:chdanqn00&@localhost/general_affairs")
 var flash = require('express-flash')
 var multer = require('multer')
@@ -99,7 +99,6 @@ db2.manyOrNone("Select * from tax_invoice_issuers order by issuer_name")
 });
 
 var main = require('./router/main')(app,fs);
-var rpa_jobs = require('./router/rpa_jobs')(app, fs, db);
 var tax_invoices = require('./router/tax_invoices')(app,fs, db2, invoice_upload,companies_map);
 var string_similarity = require('./router/string_similarity')(app,fs, db2);
 var tax_invoice_issuers = require('./router/tax_invoice_issuers')(app, fs, db2);
