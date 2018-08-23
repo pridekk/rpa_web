@@ -168,12 +168,13 @@ module.exports = function(app, fs, db, companies_map){
 
       if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
 
-        query = `select payments.id as p_id, *from payments join
+        query = `select * from ( select payments.id as p_id, * from payments join
             (
             select payment_id, count(*) as nums, sum(items.total_price) as items_total, sum(tax_invoices.total_price) as invoices_total from items left join
             	(select * from tax_invoices where bill_month like '%${month}%' and bill_year like '%${year}%') as tax_invoices on items.id = tax_invoices.tax_invoice_company_id where invoice_type = '${invoice_type}' group by payment_id order by payment_id
             ) as item_invoices
-            on payments.id = item_invoices.payment_id  order by payment_id`
+            on payments.id = item_invoices.payment_id  order by payment_id ) as payments left join `
+        query = query +    `( select * from payment_history where payment_year  like '%${year}%' and payment_month like '%${month}%' ) as history on payments.p_id = history.payment_id order by p_id`
         db.manyOrNone(query)
         .then((items) => {
           console.log(items.length)
