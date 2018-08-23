@@ -51,6 +51,20 @@
           <label>품의명</label>
           <input type="text" name="item_name" placeholder="품의명"  required>
         </div>
+        <div class="col s12 l6">
+          <label>결의번호</label>
+          <div class="input-field">
+            <select id="select_payment_id" required>
+              <option value='' disabled selected>Choose your option</option>
+              <% for (var i =0;i<payments.length; i++){ %>
+                  <option value="<%=payments[i].id%>"><%=payments[i].id+":"+payments[i].payment_name%></option>
+              <% } %>
+            </select>
+            <input type="hidden" name="payment_id" id="payment_id" >
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col s12 l3">
           <label>코드번호</label>
           <input type="text" name="code" placeholder="코드번호" >
@@ -112,6 +126,9 @@
       })
       $("#select_invoice_type").change( function() {
           $('#invoice_type').val($("#select_invoice_type option:selected").val());
+      })
+      $("#select_payment_id").change( function() {
+          $('#payment_id').val($("#select_payment_id option:selected").val());
       })
     });
   </script>

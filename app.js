@@ -108,3 +108,4 @@ var apis = require('./router/apis')(app, fs, db2,invoice_upload);
 var maintain_reports = require('./router/maintain_reports')(app, fs, db2,maintain_report_upload);
 var monthly_reports = require('./router/monthly_reports')(app, fs, db2,companies_map);
 var companies = require('./router/companies')(app,fs,db2)
+var payments = require('./router/payments')(app,fs,db2)

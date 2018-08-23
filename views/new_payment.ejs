@@ -1,0 +1,39 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+</head>
+<body>
+  <% include ./nav.ejs%>
+  <div class="container">
+    <h4>결의 등록</h4>
+    <form action="/payments"  method="post" >
+
+          <div class="row">
+            <div class="input-field col s12 l3">
+              <label>결의명</label>
+              <input type="text" name="payment_name" placeholder="결의명"  autofocus required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-field col s12 l6">
+              <label>결의 코드</label>
+              <input type="text" name="payment_code" placeholder="결의 코드번호를 입력하세요"  required >
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 l6">
+              <label>결의 주기</label>
+              <input type="text" name="payment_cycle" placeholder="연,월,분기 중 하나를 입력 "  required>
+            </div>
+          </div>
+          <div class="row">
+            <input class="btn" type="submit"   value="등록">
+          </div>
+
+    </form>
+  </div>
+
+  <% include ./footer.ejs %>
+</body>
+</html>

@@ -147,6 +147,50 @@ module.exports = function(app, fs, db, companies_map){
 
     });
 
+    app.get('/monthly_reports/payments', (req,res) =>{
+      invoice_type = req.query.invoice_type
+      month= req.query.month
+      year = req.query.year
+      if(typeof month === "undefined"){
+        let d = new Date()
+        d.setMonth(d.getMonth()-1)
+        month = d.getMonth() + 1
+      }
+      if(typeof year === "undefined"){
+        let d = new Date()
+        d.setMonth(d.getMonth()-1)
+        year = d.getFullYear()
+      }
+      console.log("month:", month)
+
+      console.log(req.query)
+      req.session.invoice_type = invoice_type
+
+      if (invoice_type && ["maintenance", "fee"].indexOf(invoice_type) > -1){
+
+        query = `select payments.id as p_id, *from payments join
+            (
+            select payment_id, count(*) as nums, sum(items.total_price) as items_total, sum(tax_invoices.total_price) as invoices_total from items left join
+            	(select * from tax_invoices where bill_month like '%${month}%' and bill_year like '%${year}%') as tax_invoices on items.id = tax_invoices.tax_invoice_company_id where invoice_type = '${invoice_type}' group by payment_id order by payment_id
+            ) as item_invoices
+            on payments.id = item_invoices.payment_id  order by payment_id`
+        db.manyOrNone(query)
+        .then((items) => {
+          console.log(items.length)
+          res.render('payment_monthly_reports', {
+            invoice_type: invoice_type,
+            title: "결의 정리",
+            payments: items,
+            year: year,
+            month: month
+          });
+        })
+        .catch( (err) => {
+          console.log("Error: ", err);
+        });
+      };
+    });
+
 
 
 }

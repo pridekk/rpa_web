@@ -1,0 +1,51 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+
+
+</head>
+<body>
+  <% include ./nav.ejs %>
+  <div class="container">
+    <h3> 결의 수정</h3>
+    <div class="row">
+    <div class="col s12 l6">
+      <form action="/payment/<%=data.id%>?_method=PUT"  method="post">
+        <div class="row">
+          <div class="input-field col s12 l5">
+            <label for="payment_name">결의명</label><input type="text" name="payment_name" placeholder="업체명"   value="<%=data.payment_name%>"required>
+          </div>
+          <div class="input-field col s12 l7">
+            <label for="payment_code">결의코드</label><input type="text" name="payment_number" placeholder="사업자번로를 입력하세요"  value="<%=data.payment_code%>" >
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 l10">
+            <label for="payment_cycle">결의 주기</label><input type="text" name="payment_name_alias" placeholder="년,월,분기 중 입력"   value="<%=data.payment_cycle%>">
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="input-field col s6 l2">
+            <input id="submit" class="right btn" type="submit"  value="수정">
+          </div>
+          <div class="input-field col s6 l2">
+            <a class="btn right" href="/payment/delete/<%=data.id%>"  data-method="delete"  rel="nofollow" onclick="return confirm('정말지우시겠습니까?');">삭제</a>
+          </div>
+          <div class="input-field col s6 l2">
+            <a class="btn right" href="#" onclick="javascript:history.go(-1)">Back</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+</div>
+
+<% include ./footer.ejs %>
+
+</body>
+<script>
+    // $("#input-1").
+</script>
+</html>

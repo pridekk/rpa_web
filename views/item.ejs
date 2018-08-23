@@ -68,20 +68,37 @@
           <label>품의명</label>
           <input type="text" name="item_name" placeholder="품의명" value="<%=item.item_name%>" required>
         </div>
+        <div class="col s12 l6">
+          <label>결의번호</label>
+          <input type="text" value="<%=item.payment_id%>" disabled >
+        </div>
         <div class="col s12 l3">
           <label>코드번호</label>
-          <input type="text" name="code" placeholder="코드번호"  value="<%=item.code%>" required>
+          <input type="text" name="code" placeholder="코드번호"  value="<%=item.code%>">
         </div>
         <div class="col s12 l3">
           <label>출력순서</label>
-          <input type="text" name="print_number" placeholder="출력순서"  value="<%=item.print_number%>" required>
+          <input type="text" name="print_number" placeholder="출력순서"  value="<%=item.print_number%>">
         </div>
         <div class="col s12 l6">
           <label>발송내역문구</label>
           <input type="text" name="best_match" placeholder="품의내용 발송 문구" value="<%=item.best_match%>" >
         </div>
       </div>
-
+      <div class="row">
+        <div class="col s12 l6">
+          <label>결의번호변경</label>
+          <div class="input-field">
+            <select id="select_payment_id">
+              <option value='' disabled selected>Choose your option</option>
+              <% for (var i =0;i<payments.length; i++){ %>
+                  <option value="<%=payments[i].id%>"><%=payments[i].id+":"+payments[i].payment_name%></option>
+              <% } %>
+            </select>
+              <input type="hidden" name="payment_id" id="payment_id" >
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="col s12 l3">
           <label>총금액(부가세포함)</label>
@@ -129,6 +146,9 @@
       })
       $("#select_invoice_type").change( function() {
           $('#invoice_type').val($("#select_invoice_type option:selected").val());
+      })
+      $("#select_payment_id").change( function() {
+          $('#payment_id').val($("#select_payment_id option:selected").val());
       })
     });
   </script>

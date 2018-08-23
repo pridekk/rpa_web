@@ -1,0 +1,112 @@
+<html>
+<head>
+  <% include ./header.ejs %>
+</head>
+<body>
+  <% include ./nav.ejs %>
+  <div class="container col s12">
+    <div class="row">
+      <form action="/monthly_reports" method="get">
+        <div class="input-field col s4 l2">
+          <select name="invoice_type">
+            <% if(typeof invoice_type !== "undefined" && invoice_type === "maintenance") {
+              %>
+              <option value="maintenance" selected>유지보수</option>
+              <option value="fee">정보이용료</option>
+            <% } else { invoice_type = "fee" %>
+              <option value="maintenance" >유지보수</option>
+              <option value="fee" selected>정보이용료</option>
+            <% } %>
+          </select>
+          <label>구분</label>
+        </div>
+        <div class="input-field col s4 l2">
+          <select name="year">
+            <% for(var i =2018 ;i<2025;i++) { %>
+              <% if(typeof year !== "undefined" && parseInt(year) === i) { %>
+                <option value="<%=i%>" selected><%=i%>월</option>
+              <% } else { %>
+                <option value="<%=i%>"><%=i%>월</option>
+              <% } %>
+            <% } %>
+          </select>
+          <label>년</label>
+        </div>
+        <div class="input-field col s4 l2">
+          <select name="month">
+            <% for(var i =1 ;i<13;i++) { %>
+              <% if(typeof month !== "undefined" && parseInt(month) === i) { %>
+                <option value="<%=i%>" selected><%=i%>월</option>
+              <% } else { %>
+                <option value="<%=i%>"><%=i%>월</option>
+              <% } %>
+            <% } %>
+          </select>
+          <label>월</label>
+        </div>
+        <div class="input-field col s2 l2">
+          <input class="btn left" type="submit" value="제출">
+          <a class="btn right" href="/monthly_reports/export?invoice_type=<%=invoice_type%>&month=<%=month%>&year=<%=year%>">Export</a>
+        </div>
+        <div class="input-field col s2 l2">
+
+        </div>
+      </form>
+
+    </div>
+    <div class="row">
+      <div class="col s12 l11">
+        <table >
+          <thead>
+
+            <th colspan="2">결의 번호</th>
+            <th>결의 명</th>
+            <th>걸의 코드</th>
+            <th>결의 주기</th>
+            <th>품의수</th>
+            <th>결의 금액</th>
+            <th>계산서총금액</th>
+
+
+          </thead>
+          <tbody>
+
+            <% console.log(payments) %>
+          <% for(var i = 0; i <  payments.length; i++) { payment = payments[i];  console.log(payment.invoice_type); %>
+
+            <tr  <% if(i%2 === 0) { %> class="striped" <% } %> >
+              <td> <form><label><input type="checkbox" class="payment_check" id="p_id_<%=payment.p_id%>" ><span></span></label></form></td>
+
+              <td ><%=payment.p_id%></td>
+              <td ><%=payment.payment_name%></td>
+              <td ><%=payment.payment_code%></td>
+              <td ><%=payment.payment_cycle%></td>
+              <td> <%=payment.nums%></th>
+              <td ><%=Number(payment.items_total).toLocaleString()%></td>
+              <td ><%=Number(payment.invoices_total).toLocaleString()%></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <div class="col s12 l1">
+        <ul>처리 대상
+
+        </ul>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <% include ./footer.ejs %>
+  <script>
+    $(document).ready(function(){
+       $('select').formSelect();
+
+       $('input.payment_check').
+     });
+  </script>
+</body>
+</html>

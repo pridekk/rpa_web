@@ -44,10 +44,15 @@ module.exports = function(app, fs, db, upload){
      .then((companies) => {
        db.manyOrNone("Select * from tax_invoice_issuers order by issuer_name")
        .then((issuers) => {
-         db.oneOrNone('select * from items where id = ' + invoice_id)
-         .then((data) => {
-           res.render('item', {title: '업체 수정', item: data, companies:companies, issuers: issuers})
+         db.manyOrNone("select * from payments")
+         .then((payments)=>{
+           db.oneOrNone('select * from items where id = ' + invoice_id)
+           .then((data) => {
+             res.render('item', {title: '업체 수정', item: data, companies:companies, issuers: issuers, payments: payments})
+           })
+
          })
+
        })
      }).
      catch( (err) => {
@@ -61,7 +66,10 @@ module.exports = function(app, fs, db, upload){
     .then((companies) => {
       db.manyOrNone("Select * from tax_invoice_issuers order by issuer_name")
       .then((issuers) => {
-        res.render('new_items', {title: '신규 업체 등록', companies:companies, issuers:issuers})
+        db.manyOrNone("select * from payments")
+        .then((payments)=>{
+          res.render('new_items', {title: '신규 업체 등록', companies:companies, issuers:issuers, payments: payments})
+        })
       })
     })
     .catch( (err) => {
@@ -78,12 +86,18 @@ module.exports = function(app, fs, db, upload){
     console.log(company);
     if(req.file){
       query_string = `update items set code='${company.code}', company_id = ${company.company_id},item_name='${company.item_name}',
-      issuer_id=${company.issuer_id}, best_match='${company.best_match}',total_price= ${company.total_price}, report_filename='${req.file.filename}'  where id = ${company_id}`;
+      issuer_id=${company.issuer_id}, best_match='${company.best_match}',total_price= ${company.total_price}, report_filename='${req.file.filename}', print_number ='${company.print_number}' `;
       //console.log(query_string);
     }else{
       query_string = `update items set code='${company.code}',company_id = ${company.company_id},item_name='${company.item_name}',
-      issuer_id=${company.issuer_id}, best_match='${company.best_match}',total_price= ${company.total_price}  where id = ${company_id}`;
+      issuer_id=${company.issuer_id}, best_match='${company.best_match}',total_price= ${company.total_price} , print_number ='${company.print_number}' `;
     }
+
+    if(company.payment_id){
+      query_string = query_string + `, payment_id = ${company.payment_id} `
+    }
+
+    query_string = query_string +`  where id = ${company_id}`
     console.log(query_string)
     db.none(query_string).then( () => {
       req.flash('success', '변경성공.')
@@ -103,12 +117,12 @@ module.exports = function(app, fs, db, upload){
       console.log(req.file)
       console.log(company);
       if(req.file){
-        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, best_match, total_price, report_filename, code ) Values (
-           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price}, '${req.file.filename}','${company.code}')`;
+        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, best_match, total_price, report_filename, payment_id, print_number ) Values (
+           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price}, '${req.file.filename}',${company.payment_id},'${company.print_number}')`;
         //console.log(query_string);
       }else{
-        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, best_match, total_price ,code) Values (
-           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price},'${company.code}')`;
+        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, best_match, total_price ,payment_id) Values (
+           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price},${company.payment_id},'${company.print_number}')`;
       }
       db.none(query_string).then( () => {
         //console.log( "등록성공");

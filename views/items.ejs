@@ -39,6 +39,7 @@
            <th>ID</th>
            <th>업체명</th>
            <th>품의명</th>
+           <th>결의번호</th>
            <th>코드번호</th>
            <th>출력순서</th>
            <th>발행기관</th>
@@ -53,6 +54,7 @@
            <td class="maintenance_id"><%=item.item_id%></td>
            <td><%=item.company_name%></td>
            <td><%=item.item_name%></td>
+           <td><%=item.payment_id%></td>
            <td><%=item.code%></td>
            <td><%=item.print_number%></td>
            <% if(item.issuer_id) { %>
@@ -106,6 +108,7 @@
                <th>ID</th>
                <th>업체명</th>
                <th>품의명</th>
+               <th>결의번호</th>
                <th>코드번호</th>
                <th>출력순서</th>
                <th>발행기관</th>
@@ -120,6 +123,7 @@
                <td class="fee_id"><%=item.item_id%></td>
                <td><%=item.company_name%></td>
                <td><%=item.item_name%></td>
+               <td><%=item.payment_id%></td>
                <td><%=item.code%></td>
                <td><%=item.print_number%></td>
                <% if(item.issuer_id) { %>
@@ -159,7 +163,7 @@
                 <% } %>
                </td>
                <td>
-                 <a href="/tax_invoice_company/<%=item.item_id%>" ><i class="material-icons">edit</i></a>
+                 <a href="/item/<%=item.item_id%>" ><i class="material-icons">edit</i></a>
                </td>
                 <td>
                   <a class="delete" href="/items/delete/<%=item.item_id%>"  data-method="delete" onclick="return confirm('정말지우시겠습니까?');"  rel="nofollow"><i class="material-icons">delete</a>
