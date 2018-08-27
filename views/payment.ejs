@@ -9,18 +9,25 @@
   <div class="container">
     <h3> 결의 수정</h3>
     <div class="row">
-    <div class="col s12 l6">
+    <div class="col s12 l12">
       <form action="/payment/<%=data.id%>?_method=PUT"  method="post">
         <div class="row">
-          <div class="input-field col s12 l5">
+          <div class="input-field col s12 l6">
             <label for="payment_name">결의명</label><input type="text" name="payment_name" placeholder="업체명"   value="<%=data.payment_name%>"required>
           </div>
-          <div class="input-field col s12 l7">
+        </div>
+        <div class="row">
+          <div class="input-field col s12 l6">
             <label for="payment_code">결의코드</label><input type="text" name="payment_number" placeholder="사업자번로를 입력하세요"  value="<%=data.payment_code%>" >
           </div>
         </div>
         <div class="row">
-          <div class="input-field col s12 l10">
+          <div class="input-field col s12 l3">
+            <label for="payment_dept_code">결의부점코드</label><input type="text" name="payment_name_alias" placeholder="BB0"   value="<%=data.payment_dept_code%>">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 l3">
             <label for="payment_cycle">결의 주기</label><input type="text" name="payment_name_alias" placeholder="년,월,분기 중 입력"   value="<%=data.payment_cycle%>">
           </div>
         </div>

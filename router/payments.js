@@ -8,7 +8,7 @@ module.exports = function(app, fs, db){
 
 
     if(search){
-      query_string = query_string + `where payment_name like '%${search}%' or payment_name_alias like '%${search}%' or payment_code like '%${search}%'`
+      query_string = query_string + `where payment_name like '%${search}%' or payment_name_alias like '%${search}%' or payment_code like '%${search}%' or payment_dept_code like '%${search}%'`
     }
 
     console.log(req.flash)
@@ -27,7 +27,7 @@ module.exports = function(app, fs, db){
     });
 
   });
-  app.get('/payments/:id', (req,res) => {
+  app.get('/payment/:id', (req,res) => {
     payment_id = req.params.id
     db.oneOrNone(`Select * from payments where id = ${payment_id}`)
     .then((data) => {
@@ -49,7 +49,7 @@ module.exports = function(app, fs, db){
     let payment = req.body;
 
     console.log(payment);
-    query_string = `update payments set payment_name = '${payment.payment_name}',payment_code='${payment.payment_code}', payment_cycle='${payment.payment_cycle}' where id = ${payment_id}`;
+    query_string = `update payments set payment_name = '${payment.payment_name}',payment_code='${payment.payment_code}', payment_cycle='${payment.payment_cycle}', payment_dept_code='${payment.payment_dept_code}' where id = ${payment_id}`;
     //console.log(query_string);
     db.none(query_string).then( () => {
       req.flash('success', '변경성공.')
@@ -68,7 +68,7 @@ module.exports = function(app, fs, db){
        res.redirect('back')
      })
   })
-  app.get('/payment/new', (req,res) => {
+  app.get('/payments/new', (req,res) => {
     res.render('new_payment', {title: '신규 결의 등록'})
 
   })
@@ -77,8 +77,8 @@ module.exports = function(app, fs, db){
       let payment = req.body;
 
       console.log(payment);
-      query_string = `Insert into payments (payment_name, payment_code,  payment_cycle ) Values (
-         '${payment.payment_name}', '${payment.payment_code}', '${payment.payment_cycle}')`;
+      query_string = `Insert into payments (payment_name, payment_code,  payment_cycle,payment_dept_code ) Values (
+         '${payment.payment_name}', '${payment.payment_code}', '${payment.payment_cycle}', '${payment.payment_dept_code}')`;
       //console.log(query_string);
       db.none(query_string).then( () => {
         //console.log( "등록성공");

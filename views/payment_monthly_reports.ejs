@@ -24,9 +24,10 @@
           <select name="year">
             <% for(var i =2018 ;i<2025;i++) { %>
               <% if(typeof year !== "undefined" && parseInt(year) === i) { %>
-                <option value="<%=i%>" selected><%=i%>월</option>
+                <option value="<%=i%>" selected><%=i%></option>
               <% } else { %>
-                <option value="<%=i%>"><%=i%>월</option>
+                <option
+                value="<%=i%>"><%=i%></option>
               <% } %>
             <% } %>
           </select>
@@ -36,9 +37,9 @@
           <select name="month">
             <% for(var i =1 ;i<13;i++) { %>
               <% if(typeof month !== "undefined" && parseInt(month) === i) { %>
-                <option value="<%=i%>" selected><%=i%>월</option>
+                <option value="<%=i%>" selected><%=i%></option>
               <% } else { %>
-                <option value="<%=i%>"><%=i%>월</option>
+                <option value="<%=i%>"><%=i%></option>
               <% } %>
             <% } %>
           </select>
@@ -57,13 +58,15 @@
         <table >
           <thead>
 
-            <th colspan="2">결의 번호</th>
-            <th>결의 명</th>
-            <th>걸의 코드</th>
-            <th>결의 주기</th>
+            <th></th>
+            <th>ID</th>
+            <th>결의명</th>
+            <th>걸의코드</th>
+            <th>결의주기</th>
             <th>품의수</th>
             <th>결의 금액</th>
             <th>계산서총금액</th>
+            <th>결의부점</th>
             <th>결의번호</th>
             <th>결의일</th>
 
@@ -74,8 +77,8 @@
             <% console.log(payments) %>
           <% for(var i = 0; i <  payments.length; i++) { payment = payments[i];  console.log(payment.invoice_type); %>
 
-            <tr  <% if(i%2 === 0) { %> class="striped" <% } %> >
-              <td> <form><label><input type="checkbox" class="payment_check" id="p_id_<%=payment.p_id%>" ><span></span></label></form></td>
+            <tr  id="pid_<%=payment.p_id%>" <% if(i%2 === 0) { %> class="striped" <% } %> >
+              <td> <form><label><input type="checkbox" class="payment_check" value="<%=payment.p_id%>" ><span></span></label></form></td>
 
               <td ><%=payment.p_id%></td>
               <td ><%=payment.payment_name%></td>
@@ -84,6 +87,7 @@
               <td> <%=payment.nums%></th>
               <td ><%=Number(payment.items_total).toLocaleString()%></td>
               <td ><%=Number(payment.invoices_total).toLocaleString()%></td>
+              <td> <%=payment.payment_dept_code %></td>
               <td><%= payment.payment_number%></td>
               <td><%= payment.payment_date%></td>
             </tr>

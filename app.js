@@ -12,6 +12,13 @@ var multer = require('multer')
 var csv = require('csv-express')
 require('x-date')
 
+
+if (process.argv.length >2){
+  ip = process.argv[2]
+} else {
+  ip = "127.0.0.1"
+}
+console.log(ip)
 var invoice_storage = multer.diskStorage({
   destination: (req,file,cb) => {
     console.log(file)
@@ -69,7 +76,7 @@ app.use(session({
   saveUninitialized: true
 }))
 app.use(flash())
-app.listen(5001, ()=>{console.log("server start on 5001");})
+app.listen(5001,ip,  ()=>{console.log("server start on 5001");})
 var companies_map = {}
 var issuers_map = {}
 var companies_list = []

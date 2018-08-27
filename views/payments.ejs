@@ -37,7 +37,7 @@
         </form>
       </div>
       <div class="col right">
-        <a class="btn float" href="/payment/new">신규등록</a>
+        <a class="btn float" href="/payments/new">신규등록</a>
       </div>
     </div>
 
@@ -47,6 +47,7 @@
         <th>ID</th>
         <th>결의명</th>
         <th>결의코드</th>
+        <th>결의부점</th>
         <th>결의주기</th>
         <th></th>
         <th></th>
@@ -57,6 +58,7 @@
         <td><%=payments[i].id%></td>
         <td class="issuer_name"><%=payments[i].payment_name%></td>
         <td><%=payments[i].payment_code%></td>
+        <td><%=payments[i].payment_dept_code%></td>
         <td><%=payments[i].payment_cycle%></td>
          <td>
            <a  href="/payment/<%=payments[i].id%>"><i class="material-icons">edit</i></a>

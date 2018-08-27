@@ -9,7 +9,7 @@
     <form action="/payments"  method="post" >
 
           <div class="row">
-            <div class="input-field col s12 l3">
+            <div class="input-field col s12 l6">
               <label>결의명</label>
               <input type="text" name="payment_name" placeholder="결의명"  autofocus required>
             </div>
@@ -22,7 +22,13 @@
             </div>
           </div>
           <div class="row">
-            <div class="input-field col s12 l6">
+            <div class="input-field col s12 l3">
+              <label>결의부점코드</label>
+              <input type="text" name="payment_dept_code" placeholder="결의부점코드입력 "  required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 l3">
               <label>결의 주기</label>
               <input type="text" name="payment_cycle" placeholder="연,월,분기 중 하나를 입력 "  required>
             </div>
