@@ -26,7 +26,7 @@ var invoice_storage = multer.diskStorage({
   },
   filename: (req,file,cb) => {
     console.log(file)
-    f_name = `invoice_${new Date().format('yyyy_mm_dd_HH_MM_ss')}_${Math.floor(Math.random()*10000)}.${file.mimetype.split("/").pop()}`
+    f_name = `invoice_${new Date().format('yyyy_mm_dd_HH_MM_ss')}_${Math.floor(Math.random()*10000)}_${file.originalname}`
     console.log(f_name)
     cb(null, f_name )
   }
@@ -39,7 +39,7 @@ var maintain_report_storage = multer.diskStorage({
   },
   filename: (req,file,cb) => {
     console.log(file)
-    f_name =  `maintain_${new Date().format('yyyy_mm_dd_HH_MM_ss')}_${Math.floor(Math.random()*10000)}.${file.mimetype.split("/").pop()}`
+    f_name =  `maintain_${new Date().format('yyyy_mm_dd_HH_MM_ss')}_${Math.floor(Math.random()*10000)}_${file.originalname}`
     console.log(f_name)
     cb(null, f_name )
   }
@@ -51,7 +51,7 @@ var items_storage = multer.diskStorage({
   },
   filename: (req,file,cb) => {
     console.log(file)
-    f_name =  `items_${new Date().format('yyyy_mm_dd_HH_MM_ss')}_${Math.floor(Math.random()*10000)}.${file.mimetype.split("/").pop()}`
+    f_name =  `items_${new Date().format('yyyy_mm_dd_HH_MM_ss')}_${Math.floor(Math.random()*10000)}.${file.originalname}`
     console.log(f_name)
     cb(null, f_name )
   }
