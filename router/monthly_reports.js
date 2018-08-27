@@ -151,6 +151,7 @@ module.exports = function(app, fs, db, companies_map){
       invoice_type = req.query.invoice_type
       month= req.query.month
       year = req.query.year
+      is_export = req.query.is_export
       if(typeof month === "undefined"){
         let d = new Date()
         d.setMonth(d.getMonth()-1)
@@ -178,16 +179,46 @@ module.exports = function(app, fs, db, companies_map){
         db.manyOrNone(query)
         .then((items) => {
           console.log(items.length)
-          res.render('payment_monthly_reports', {
-            invoice_type: invoice_type,
-            title: "결의 정리",
-            payments: items,
-            year: year,
-            month: month
-          });
+          if(is_export) {
+            let json = JSON.stringify(items)
+
+            jsonexport(items, (err,csv) => {
+              if(err) return console.log(err)
+              // console.log(csv)
+              filename = `payments_${new Date().format('yyyy_mm_dd_HH_MM_ss')}.csv`
+              fs.writeFile (filename, csv, (err) => {
+                  if (err) throw err;
+
+                  res.download( filename, filename, (err) =>{
+                    if(err){
+                      res.send(err)
+                    } else {
+                      fs.unlink(filename , (err) => {
+                        if(err){
+                          console.log(err)
+                        }
+                      })
+                      console.log(filename + " download complete")
+                    }
+                  })
+
+                }
+              );
+            })
+
+          }else{
+            res.render('payment_monthly_reports', {
+              invoice_type: invoice_type,
+              title: "결의 정리",
+              payments: items,
+              year: year,
+              month: month
+            });
+          }
+
         })
         .catch( (err) => {
-          console.log("Error: ", err);
+          res.send(err)
         });
       };
     });
