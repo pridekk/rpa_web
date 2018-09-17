@@ -35,6 +35,7 @@ module.exports = function(app, fs, db, companies_map){
           for(var i =0; i< items.length;i++){
             items[i].invoices = []
             items[i].maintain_reports = []
+            items[i].resolutions = []
           }
           db.manyOrNone(`select * from tax_invoices where bill_month like '%${month}%' and bill_year like '%${year}%' and confirmed = true order by id `)
           .then((invoices) => {
@@ -55,14 +56,26 @@ module.exports = function(app, fs, db, companies_map){
                 }
 
               }
-              console.log(items.length)
-              res.render('monthly_reports', {
-                title: invoice_type,
-                items: items,
-                invoice_type: invoice_type,
-                year: year,
-                month: month
-              });
+              db.manyOrNone(`select * from resolutions where bill_month =${month} and bill_year = ${year}`)
+              .then((resolutions) => {
+                console.log("resolution")
+                for(var i = 0; i < resolutions.length; i++){
+                  for(var j = 0;j< items.length;j++){
+                    if (resolutions[i].item_id === items[j].item_id){
+                      items[j].resolutions.push(resolutions[i])
+                    }
+                  }
+
+                }
+                console.log(items.length)
+                res.render('monthly_reports', {
+                  title: invoice_type,
+                  items: items,
+                  invoice_type: invoice_type,
+                  year: year,
+                  month: month
+                });
+              })
             })
           })
         })

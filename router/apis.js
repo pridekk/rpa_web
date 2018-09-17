@@ -72,7 +72,6 @@ module.exports = function(app, fs, db,upload){
 
   app.post('/apis/fileupload',  upload.single('userfile'),(req,res) => {
     let id = req.query.id
-
     console.log(req.file)
 
 
@@ -87,6 +86,19 @@ module.exports = function(app, fs, db,upload){
 
 
   });
+
+  app.post('/apis/resolutions', (req,res) => {
+    let resolution = req.body
+
+    console.log(resolution)
+    db.none(`insert into resolutions (item_id, number, year, month, date,bill_year, bill_month) values (${resolution.item_id}, ${resolution.number}, ${resolution.year}, ${resolution.month}, ${resolution.date}, ${resolution.bill_year}, ${resolution.bill_month})`)
+    .then(() => {
+      req.send('insert completed')
+    }).catch((err) => {
+      console.log(err)
+      res.send(err)
+    })
+  })
 
 
 

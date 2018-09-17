@@ -76,7 +76,7 @@ app.use(session({
   saveUninitialized: true
 }))
 app.use(flash())
-app.listen(5001,ip,  ()=>{console.log("server start on 5001");})
+app.listen(80,ip,  ()=>{console.log("server start on 5001");})
 var companies_map = {}
 var issuers_map = {}
 var companies_list = []
@@ -110,7 +110,7 @@ var tax_invoices = require('./router/tax_invoices')(app,fs, db2, invoice_upload,
 var string_similarity = require('./router/string_similarity')(app,fs, db2);
 var tax_invoice_issuers = require('./router/tax_invoice_issuers')(app, fs, db2);
 var items = require('./router/items')(app, fs, db2, item_upload);
-var apis = require('./router/apis')(app, fs, db2,invoice_upload);
+var apis = require('./router/apis')(app, fs, db2,item_upload);
 var maintain_reports = require('./router/maintain_reports')(app, fs, db2,maintain_report_upload);
 var monthly_reports = require('./router/monthly_reports')(app, fs, db2,companies_map);
 var companies = require('./router/companies')(app,fs,db2)
