@@ -229,9 +229,9 @@ module.exports = function(app, fs, db,upload, companies_map){
       //console.log(req)
       let company = req.body;
       console.log(company)
-      query_string = `insert into tax_invoices (company, tax_invoice_company_id, item_name,item_name_alias, bill_year, bill_month, evidence_date, price, tax, total_price, filepath, confirmed ) Values (
+      query_string = `insert into tax_invoices (company, tax_invoice_company_id, item_name,item_name_alias, bill_year, bill_month, evidence_date, price, tax, total_price, filepath, mgmt_id,confirmed ) Values (
          '${company.company_name}',${company.tax_invoice_company_id},'${company.item_name}','${company.item_name.replace(/d+/g,'.').trim()}','${company.bill_year}',
-         '${company.bill_month}', '${company.evidence_date}',${company.price},${company.tax},${company.total_price},'${req.file.filename}',`;
+         '${company.bill_month}', '${company.evidence_date}',${company.price},${company.tax},${company.total_price},'${req.file.filename}','${company.mgmt_id}',`;
       if(company.confirmed === 'on'){
         query_string = query_string + "true)"
       }else {
@@ -240,7 +240,7 @@ module.exports = function(app, fs, db,upload, companies_map){
       db.none(query_string).then( () => {
         console.log( "등록성공");
 
-        query_string = `select id from tax_invoices where company = '${company.company_name}' and item_name = '${company.item_name}' and bill_year= '${company.bill_year}' and bill_month = '${company.bill_month}'`
+        query_string = `select id from tax_invoices where company = '${company.company_name}' and item_name = '${company.item_name}' and bill_year= '${company.bill_year}' and bill_month = '${company.bill_month}' and mgmt_id = '${company.mgmt_id}'`
         db.manyOrNone(query_string).then((data2) => {
           res.redirect(`/monthly_reports?invoice_type=${company.invoice_type}&year=${company.bill_year}&month=${company.bill_month}`)
         }).catch((err) => {

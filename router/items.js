@@ -84,15 +84,12 @@ module.exports = function(app, fs, db, upload){
     let company = req.body;
     let company_id = req.params.id
     console.log(company);
+    query_string =  `update items set code='${company.code}', company_id = ${company.company_id},item_name='${company.item_name}',
+    issuer_id=${company.issuer_id}, billing_cycle='${company.billing_cycle}',total_price= ${company.total_price}, dept_code='${company.dept_code}', print_number ='${company.print_number}' `;
     if(req.file){
-      query_string = `update items set code='${company.code}', company_id = ${company.company_id},item_name='${company.item_name}',
-      issuer_id=${company.issuer_id}, best_match='${company.best_match}',total_price= ${company.total_price}, report_filename='${req.file.filename}', print_number ='${company.print_number}' `;
+      query_string = query_string + `, report_filename='${req.file.filename}' `;
       //console.log(query_string);
-    }else{
-      query_string = `update items set code='${company.code}',company_id = ${company.company_id},item_name='${company.item_name}',
-      issuer_id=${company.issuer_id}, best_match='${company.best_match}',total_price= ${company.total_price} , print_number ='${company.print_number}' `;
     }
-
     if(company.payment_id){
       query_string = query_string + `, payment_id = ${company.payment_id} `
     }
@@ -101,7 +98,7 @@ module.exports = function(app, fs, db, upload){
     console.log(query_string)
     db.none(query_string).then( () => {
       req.flash('success', '변경성공.')
-      res.redirect('/items')
+      res.redirect(`/item/${company_id}`)
     }).catch((err) => {
       //console.error( "등록실패:" ,err);
       console.log(query_string)
@@ -117,12 +114,12 @@ module.exports = function(app, fs, db, upload){
       console.log(req.file)
       console.log(company);
       if(req.file){
-        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, best_match, total_price, report_filename, payment_id, print_number ) Values (
-           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price}, '${req.file.filename}',${company.payment_id},'${company.print_number}')`;
+        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, billing_cycle, total_price, report_filename,dept_code ) Values (
+           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.billing_cycle}', ${company.total_price}, '${req.file.filename}', '${company.dept_code}')`;
         //console.log(query_string);
       }else{
-        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, best_match, total_price ,payment_id) Values (
-           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.best_match}', ${company.total_price},${company.payment_id},'${company.print_number}')`;
+        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, billing_cycle,total_price, dept_code) Values (
+           '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.billing_cycle}', ${company.total_price}, '${company.dept_code}')`;
       }
       db.none(query_string).then( () => {
         //console.log( "등록성공");

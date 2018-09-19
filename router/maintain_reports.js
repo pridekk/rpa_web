@@ -209,9 +209,9 @@ module.exports = function(app, fs, db, upload){
       //console.log(req)
       let company = req.body;
       console.log(company)
-      query_string = `insert into maintain_reports (company_name, tax_invoice_company_id, item_name,year, month, filepath, confirmed ) Values (
+      query_string = `insert into maintain_reports (company_name, tax_invoice_company_id, item_name,year, month, filepath,sender, subject, confirmed ) Values (
          '${company.company_name}',${company.tax_invoice_company_id},'${company.item_name}','${company.bill_year}',
-         '${company.bill_month}','${req.file.filename}',`;
+         '${company.bill_month}','${req.file.filename}', '${company.sender}', '${company.subject}',`;
       if(company.confirmed === 'on'){
         query_string = query_string + "true)"
       }else {

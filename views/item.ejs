@@ -64,25 +64,26 @@
       <div class="row">
 
         </div>
-        <div class="col s12 l6">
+        <div class="col s12 l4">
           <label>품의명</label>
           <input type="text" name="item_name" placeholder="품의명" value="<%=item.item_name%>" required>
         </div>
-        <div class="col s12 l6">
-          <label>결의번호</label>
-          <input type="text" value="<%=item.payment_id%>" disabled >
+        <div class="col s12 l2">
+          <label>결의주기</label>
+          <input type="text" name="billing_cycle" id="billing_cycle" value="<%=item.billing_cycle%>" required>
         </div>
-        <div class="col s12 l3">
-          <label>코드번호</label>
-          <input type="text" name="code" placeholder="코드번호"  value="<%=item.code%>">
+
+        <div class="col s12 l2">
+          <label>결의코드</label>
+          <input type="text" name="code"  value="<%=item.code%>" required>
         </div>
-        <div class="col s12 l3">
+        <div class="col s12 l2">
+          <label>부점코드</label>
+          <input type="text" name="dept_code"  value="<%=item.dept_code%>" required>
+        </div>
+        <div class="col s12 l2">
           <label>출력순서</label>
-          <input type="text" name="print_number" placeholder="출력순서"  value="<%=item.print_number%>">
-        </div>
-        <div class="col s12 l6">
-          <label>발송내역문구</label>
-          <input type="text" name="best_match" placeholder="품의내용 발송 문구" value="<%=item.best_match%>" >
+          <input type="text" name="print_number" placeholder="출력순서"  value="<%=item.print_number%>" >
         </div>
       </div>
       <div class="row">
@@ -125,7 +126,9 @@
       <div class = "row">
         <div class="col s12 l12">
             <input class="btn right" type="submit"  value="수정">
+            <a href="/items" class="btn right">목록</a>
         </div>
+
       </div>
     </form>
   </div>

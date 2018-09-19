@@ -40,7 +40,9 @@
            <th>업체명</th>
            <th>품의명</th>
            <th>결의번호</th>
-           <th>코드번호</th>
+           <th>결의주기</th>
+           <th>결의코드</th>
+           <th>부점코드</th>
            <th>출력순서</th>
            <th>발행기관</th>
            <th>금액</th>
@@ -55,7 +57,9 @@
            <td><%=item.company_name%></td>
            <td><%=item.item_name%></td>
            <td><%=item.payment_id%></td>
+           <th><%=item.billing_cycle%></td>
            <td><%=item.code%></td>
+           <td><%=item.dept_code%></td>
            <td><%=item.print_number%></td>
            <% if(item.issuer_id) { %>
              <td><%=item.issuer_name%></td>

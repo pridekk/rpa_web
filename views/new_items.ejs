@@ -51,31 +51,41 @@
           <label>품의명</label>
           <input type="text" name="item_name" placeholder="품의명"  required>
         </div>
-        <div class="col s12 l6">
-          <label>결의번호</label>
-          <div class="input-field">
-            <select id="select_payment_id" required>
-              <option value='' disabled selected>Choose your option</option>
-              <% for (var i =0;i<payments.length; i++){ %>
-                  <option value="<%=payments[i].id%>"><%=payments[i].id+":"+payments[i].payment_name%></option>
-              <% } %>
-            </select>
-            <input type="hidden" name="payment_id" id="payment_id" >
-          </div>
-        </div>
+
       </div>
       <div class="row">
         <div class="col s12 l3">
-          <label>코드번호</label>
-          <input type="text" name="code" placeholder="코드번호" >
+          <label>결의주기</label>
+          <select id="billing_cycle_select"  required>
+            <option value='' disabled selected>Choose your option</option>
+            <option value='월'>월</option>
+            <option value='분기'>분기</option>
+            <option value='반기'>반기</option>
+            <option value='연'>연</option>
+          </select>
+          <input type="hidden" name="billing_cycle" id="billing_cycle" >
         </div>
-        <div class="col s12 l3">
-          <label>출력순서</label>
+        <div class="col s12 l2">
+          <label>결의코드</label>
+          <input type="text" name="code"  value="<%=item.code%>" required>
+        </div>
+        <div class="col s12 l2">
+          <label>부점코드</label>
+          <input type="text" name="dept_code"  value="<%=item.dept_code%>" required>
+        </div>
+        <div class="col s12 l2">
+          <label>순서</label>
           <input type="text" name="print_number" placeholder="출력순서"   >
         </div>
-        <div class="col s12 l6">
-          <label>발송내역문구</label>
-          <input type="text" name="best_match" placeholder="품의내용 발송 문구" >
+        <div class="col s12 l3">
+          <label>결의번호</label>
+          <select id="select_payment_id" >
+            <option value='' disabled selected>Choose your option</option>
+            <% for (var i =0;i<payments.length; i++){ %>
+                <option value="<%=payments[i].id%>"><%=payments[i].id+":"+payments[i].payment_name%></option>
+            <% } %>
+          </select>
+          <input type="hidden" name="payment_id" id="payment_id" >
         </div>
       </div>
 
@@ -129,6 +139,9 @@
       })
       $("#select_payment_id").change( function() {
           $('#payment_id').val($("#select_payment_id option:selected").val());
+      })
+      $("#billing_cycle_select").change( function() {
+          $('#billing_cycle').val($("#billing_cycle_select option:selected").val());
       })
     });
   </script>

@@ -56,15 +56,19 @@
     </div>
     <table class="col s12">
       <thead>
-        <th></th>
+        <th>C</th>
+        <th>ID</td>
         <th>회사명</th>
         <th>사업자번호</th>
         <th>품목</th>
+        <th>결의코드</th>
         <th>결의주기</th>
         <th>결의일</th>
         <th>결의번호</th>
         <th>품의총금액</th>
-        <th>계산서총금액</th>
+        <th>금액</th>
+        <th>세금</th>
+        <th>총금액</th>
         <th>차액</th>
         <th>증빙일</th>
         <th>세금계산서</th>
@@ -77,16 +81,13 @@
         <% console.log(items) %>
       <% for(var i = 0; i <  items.length; i++) { item = items[i];  console.log(item.invoice_type); %>
         <% if(item.invoice_type === invoice_type){ rows = Math.max(item.invoices.length, item.maintain_reports.length, 1) %>
-          <tr id="item_id_<%=item.id%>" <% if(i%2 === 0) { %> class="striped" <% } %> >
-          <% if(item.resolutions.length > 0) { %>
-            <td rowspan="<%=rows%>"> <form><label><input type="checkbox" class="item_check" disabled value="<%=item.id%>" ><span></span></label></form></td>
-          <% } else { %>
-            <td rowspan="<%=rows%>"> <form><label><input type="checkbox" class="item_check" value="<%=item.id%>" ><span></span></label></form></td>
-          <% } %>
-
+          <tr id="item_id_<%=item.item_id%>" <% if(i%2 === 0) { %> class="striped" <% } %> >
+          <td rowspan="<%=rows%>"> <form><label><input type="checkbox" class="item_check" value="<%=item.id%>" ><span></span></label></form></td>
+          <td rowspan="<%=rows%>"><%=item.item_id%></td>
           <td rowspan="<%=rows%>"><%=item.company_name%></td>
           <td rowspan="<%=rows%>"><%=item.company_number%></td>
           <td rowspan="<%=rows%>"><%=item.item_name%></td>
+          <td rowspan="<%=rows%>"><%=item.code%></td>
           <td rowspan="<%=rows%>"><%=item.billing_cycle%></td>
           <% if(item.resolutions.length > 0) { %>
             <td rowspan="<%=rows%>"><%=`${item.resolutions[0].month}월 ${item.resolutions[0].date}일`%></td>
@@ -98,12 +99,14 @@
           <td rowspan="<%=rows%>"><%=Number(item.total_price).toLocaleString()%></td>
 
           <% if (item.invoices.length>0) { %>
+            <td><%=Number(item.invoices[0].price).toLocaleString()%></td>
+            <td><%=Number(item.invoices[0].tax).toLocaleString()%></td>
             <td><%=Number(item.invoices[0].total_price).toLocaleString()%></td>
             <td><%=Number(item.total_price - item.invoices[0].total_price).toLocaleString()%></td>
             <td><%=item.invoices[0].evidence_date%></td>
-            <td><a class="Popup" href="/tax_invoice/<%=item.invoices[0].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></td>
+            <td><a class="Popup" href="/tax_invoice/<%=item.invoices[0].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a>id:<%=item.invoices[0].id%></td>
           <%} else { %>
-            <td colspan="3"></td>
+            <td colspan="5"></td>
             <td>
               <a href="/tax_invoices/new?item_id=<%=item.item_id%>&invoice_type=<%=invoice_type%>&company_name=<%=item.company_name%>&item_name=<%=item.item_name%>&total_price=<%=item.total_price%>&bill_year=<%=year%>&bill_month=<%=month%>"><i class="material-icons">add</i></a>
             </td>
@@ -112,7 +115,7 @@
 
           <% if(invoice_type === "maintenance") { %>
             <% if (item.maintain_reports.length>0) { %>
-              <td><a class="Popup" href="/maintain_report/<%=item.maintain_reports[0].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></td>
+              <td><a class="Popup" href="/maintain_report/<%=item.maintain_reports[0].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a>id:<%=item.maintain_reports[0].id%></td>
             <%} else { %>
                 <td>
                   <a href="/maintain_reports/new?item_id=<%=item.item_id%>&company_name=<%=item.company_name%>&item_name=<%=item.item_name%>&bill_year=<%=year%>&bill_month=<%=month%>"><i class="material-icons">add</i></a>
@@ -123,14 +126,16 @@
             <tr>
             <% if(item.invoices.length > j){ %>
               <td><%=item.invoices[j].total_price%></td>
+              <td><%=Number(item.invoices[0].price).toLocaleString()%></td>
+              <td><%=Number(item.invoices[0].tax).toLocaleString()%></td>
               <td><%=item.total_price - item.invoices[j].total_price%></td>
               <td><%=item.invoices[j].evidence_date%></td>
-              <td><a class="Popup" href="/tax_invoice/<%=item.invoices[j].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></div></td>
+              <td><a class="Popup" href="/tax_invoice/<%=item.invoices[j].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a>id:<%=item.invoices[j].id%></td>
             <%} else { %>
-              <td colspan="4" ></td>
+              <td colspan="6" ></td>
             <% }%>
             <% if(item.maintain_reports.length > j){ %>
-              <td><a class="Popup" href="/maintain_report/<%=item.maintain_reports[j].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a></div></td>
+              <td><a class="Popup" href="/maintain_report/<%=item.maintain_reports[j].id%>?from=monthly_reports"><i class="material-icons">picture_as_pdf</i></a>id:<%=item.maintain_reports[j].id%></td>
             <%} else { %>
               <td></td>
             <% }%>
