@@ -220,6 +220,11 @@ module.exports = function(app, fs, db,upload, companies_map){
   })
   app.get('/tax_invoices/new', (req,res) => {
     data = req.query
+    let d = new Date()
+    d.setMonth(d.getMonth()-1)
+    data.bill_month = d.getMonth() + 1
+    data.bill_year =  d.getFullYear()
+
     tax_invoice_company = null
     res.render('new_tax_invoice', {title: '신규 업체 등록', data, companies:companies, issuers:issuers, tax_invoice_company })
 
@@ -228,10 +233,24 @@ module.exports = function(app, fs, db,upload, companies_map){
   app.post('/tax_invoices', upload.single('userfile'), (req,res) =>{
       //console.log(req)
       let company = req.body;
-      console.log(company)
-      query_string = `insert into tax_invoices (company, tax_invoice_company_id, item_name,item_name_alias, bill_year, bill_month, evidence_date, price, tax, total_price, filepath, mgmt_id,confirmed ) Values (
+      let d = new Date()
+      d.setMonth(d.getMonth()-1)
+      if(typeof(company.bill_year) === ''){
+        company.bill_year =  d.getFullYear()
+      }
+      if(typeof(company.bill_month) === ''){
+        company.bill_month = d.getMonth() + 1
+      }
+      console.log(company.tax_invoice_company_id)
+      if(company.tax_invoice_company_id === ''){
+        query_string = `insert into tax_invoices (company,  item_name,item_name_alias, bill_year, bill_month, evidence_date, price, tax, total_price, filepath, mgmt_id,site, confirmed ) Values (
+         '${company.company_name}','${company.item_name}','${company.item_name.replace(/d+/g,'.').trim()}','${company.bill_year}',
+         '${company.bill_month}', '${company.evidence_date}',${company.price},${company.tax},${company.total_price},'${req.file.filename}', '${company.mgmt_id}', '${company.site}',`;
+      } else {
+        query_string = `insert into tax_invoices (company, tax_invoice_company_id, item_name,item_name_alias, bill_year, bill_month, evidence_date, price, tax, total_price, filepath,mgmt_id,site, confirmed ) Values (
          '${company.company_name}',${company.tax_invoice_company_id},'${company.item_name}','${company.item_name.replace(/d+/g,'.').trim()}','${company.bill_year}',
-         '${company.bill_month}', '${company.evidence_date}',${company.price},${company.tax},${company.total_price},'${req.file.filename}','${company.mgmt_id}',`;
+         '${company.bill_month}', '${company.evidence_date}',${company.price},${company.tax},${company.total_price},'${req.file.filename}', '${company.mgmt_id}', '${company.site}',`;
+      }
       if(company.confirmed === 'on'){
         query_string = query_string + "true)"
       }else {
@@ -240,11 +259,11 @@ module.exports = function(app, fs, db,upload, companies_map){
       db.none(query_string).then( () => {
         console.log( "등록성공");
 
-        query_string = `select id from tax_invoices where company = '${company.company_name}' and item_name = '${company.item_name}' and bill_year= '${company.bill_year}' and bill_month = '${company.bill_month}' and mgmt_id = '${company.mgmt_id}'`
-        db.manyOrNone(query_string).then((data2) => {
-          res.redirect(`/monthly_reports?invoice_type=${company.invoice_type}&year=${company.bill_year}&month=${company.bill_month}`)
+        query_string = `select * from tax_invoices where company = '${company.company_name}' and item_name = '${company.item_name}' and bill_year= '${company.bill_year}' and bill_month = '${company.bill_month}' and mgmt_id = '${company.mgmt_id}' order by id desc limit 1`
+        db.oneOrNone(query_string).then((data2) => {
+          res.redirect(`/tax_invoice/${data2.id}`)
         }).catch((err) => {
-          cosole.log(query_string)
+          console.log(query_string)
           console.error( "등록실패:" ,err);
           res.send({result:err});
           res.end()

@@ -88,8 +88,8 @@ module.exports = function(app, fs, db, upload){
     issuer_id=${company.issuer_id}, billing_cycle='${company.billing_cycle}',total_price= ${company.total_price}, dept_code='${company.dept_code}', print_number ='${company.print_number}' `;
     if(req.file){
       query_string = query_string + `, report_filename='${req.file.filename}' `;
-      //console.log(query_string);
     }
+
     if(company.payment_id){
       query_string = query_string + `, payment_id = ${company.payment_id} `
     }
@@ -114,11 +114,11 @@ module.exports = function(app, fs, db, upload){
       console.log(req.file)
       console.log(company);
       if(req.file){
-        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, billing_cycle, total_price, report_filename,dept_code ) Values (
+        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, billing_cycle, total_price, report_filename, dept_code ) Values (
            '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.billing_cycle}', ${company.total_price}, '${req.file.filename}', '${company.dept_code}')`;
         //console.log(query_string);
       }else{
-        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, billing_cycle,total_price, dept_code) Values (
+        query_string = `insert into items (invoice_type, company_id, item_name, issuer_id, billing_cycle, total_price, dept_code) Values (
            '${company.invoice_type}',${company.company_id},'${company.item_name}',${company.issuer_id}, '${company.billing_cycle}', ${company.total_price}, '${company.dept_code}')`;
       }
       db.none(query_string).then( () => {

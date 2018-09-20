@@ -12,14 +12,17 @@
     <div class="col s12 l6">
       <form action="/maintain_reports" enctype="multipart/form-data" method="post">
         <div class="row">
-          <div class="input-field col s12 l5">
-            <label for="company_name">업체명</label><input type="text" name="company_name" placeholder="업체명"   value="<%=data.company_name%>"required>
-            <input type="hidden" name="tax_invoice_company_id" placeholder="업체명"   value="<%=data.item_id%>"required>
+          <div class="input-field col s12 l2">
+            <label for="tax_invoice_company_id">패칭품의</label><input type="text" name="tax_invoice_company_id"   value="<%=data.item_id%>"required>
           </div>
         </div>
+	
         <div class="row">
-          <div class="input-field col s12 l10">
-            <label for="company_name">품의명</label><input type="text" name="item_name" placeholder="품목"  value="<%=data.item_name%>" required>
+          <div class="input-field col s12 l4">
+            <label for="sender">발신인</label><input type="text" name="sender" value="<%=data.sender%>">
+          </div>
+          <div class="input-field col s12 l8">
+            <label for="subject">메일제목</label><input type="text" name="subject"   value="<%=data.subject%>">
           </div>
         </div>
         <div class="row">

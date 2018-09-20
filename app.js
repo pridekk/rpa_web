@@ -5,8 +5,8 @@ var session = require('express-session');
 var method_override = require('method-override')
 var fs = require('fs')
 var pgp = require('pg-promise')();
-
 var db2 = pgp("postgres://general_affairs:chdanqn00&@localhost/general_affairs")
+//var db2 = pgp("postgres://general_affairs:chdanqn00&@postgres/general_affairs")
 var flash = require('express-flash')
 var multer = require('multer')
 var csv = require('csv-express')
@@ -87,7 +87,7 @@ db2.manyOrNone("Select * from companies order by company_name")
       companies_map[data[i].id] = data[i]
       companies_list.push(data[i])
     }
-    console.log(companies_map)
+    //#console.log(companies_map)
 })
 .catch( (err) => {
   //res.send(err)

@@ -10,7 +10,7 @@
 
       <div class="row">
 
-        <div class="col s12 l3">
+        <div class="col s12 l2">
           <label>세금계산서처리타입</label>
           <div class="input-field">
             <select id="select_invoice_type" required>
@@ -27,7 +27,7 @@
               <% } %>
           </div>
         </div>
-        <div class="col s12 l3">
+        <div class="col s12 l2">
           <label>업체이름</label>
           <div class="input-field">
             <select id="select_company" required>
@@ -44,7 +44,7 @@
           </div>
 
       </div>
-      <div class="col s12 l6">
+      <div class="col s12 l2">
         <label>계산서발송SITE</label>
         <div class="input-field">
           <select id="select_issuer"  required>
@@ -62,8 +62,6 @@
       </div>
 
       <div class="row">
-
-        </div>
         <div class="col s12 l4">
           <label>품의명</label>
           <input type="text" name="item_name" placeholder="품의명" value="<%=item.item_name%>" required>
@@ -72,6 +70,8 @@
           <label>결의주기</label>
           <input type="text" name="billing_cycle" id="billing_cycle" value="<%=item.billing_cycle%>" required>
         </div>
+      </div>
+      <div class="row">
 
         <div class="col s12 l2">
           <label>결의코드</label>
@@ -84,20 +84,6 @@
         <div class="col s12 l2">
           <label>출력순서</label>
           <input type="text" name="print_number" placeholder="출력순서"  value="<%=item.print_number%>" >
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12 l6">
-          <label>결의번호변경</label>
-          <div class="input-field">
-            <select id="select_payment_id">
-              <option value='' disabled selected>Choose your option</option>
-              <% for (var i =0;i<payments.length; i++){ %>
-                  <option value="<%=payments[i].id%>"><%=payments[i].id+":"+payments[i].payment_name%></option>
-              <% } %>
-            </select>
-              <input type="hidden" name="payment_id" id="payment_id" >
-          </div>
         </div>
       </div>
       <div class="row">
@@ -157,3 +143,4 @@
   </script>
 </body>
 </html>
+

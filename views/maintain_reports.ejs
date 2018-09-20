@@ -36,8 +36,6 @@
 
       <table>
         <tr>
-          <th>회사명</th>
-          <th>품목</th>
           <th>발신자</th>
           <th>제목</th>
           <th>년</th>
@@ -48,8 +46,6 @@
         </tr>
         <% data.forEach( (report) => { %>
         <tr>
-          <td><%=report.company_name%></td>
-          <td><a  href="/maintain_report/<%=report.id%>"><%=report.item_name%></a></td>
           <td><a  href="/maintain_report/<%=report.id%>"><%=report.sender%></a></td>
           <td><a  href="/maintain_report/<%=report.id%>"><%=report.subject%></a></td>
           <td><%=report.year%></td>

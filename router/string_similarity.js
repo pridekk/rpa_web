@@ -50,16 +50,47 @@ module.exports = function(app, fs, db){
       if( data === null || data.length === 0 ){
         var matches = string_similarity.findBestMatch(company+"," +item + "," + site, csvData)
         console.log(matches.bestMatch)
-        res.json({bestMatch: matches.bestMatch.target, ratio: matches.bestMatch.rating*100, id: csvDataIndex[matches.bestMatch.target]})
+	query_string = `select * from items where id = ${csvDataIndex[matches.bestMatch.target]}`	
+        db.oneOrNone(query_string).then((data2) => {
+          res.json({bestMatch: matches.bestMatch.target, ratio: matches.bestMatch.rating*100,invoice_type: data2.invoice_type, id: csvDataIndex[matches.bestMatch.target]})
+        })
       }else{
-
-        res.json({bestMatch: `${data.company}, ${data.item_name}` , ratio: 100, id: data.tax_invoice_company_id})
+	query_string = `select * from items where id = ${data.tax_invoice_company_id}`	
+        db.oneOrNone(query_string).then((data2) => {
+          res.json({bestMatch: `${data.company}, ${data.item_name}` , ratio: 100, invoice_type: data2.invoice_type, id: data.tax_invoice_company_id})
+        })
       }
 
     })
 
 
   })
+  app.get('/similarity/maintain', (req,res) => {
+
+    let sender = req.query.sender
+    let subject = req.query.subject
+    let filename = req.query.filename
+
+    let query = `select tax_invoice_company_id as id from maintain_reports where sender like '%${sender}%' order by id desc limit 1`
+
+    db.oneOrNone(query).then( (data) => {
+	console.log(data)
+	if(data && data.id !== null ){
+
+		query = `select * from items where id = ${data.id}`
+	}else{
+		query = `select * from items limit 1`
+
+	}
+	db.oneOrNone(query).then( (item) => {
+	  res.json(item)
+	})
+    })
+    .catch( (err) => {
+	console.log(err)
+   	res.send(err)
+    });  
+  });
 
   app.get('/similarity/company/:company_name', (req,res) => {
 

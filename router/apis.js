@@ -1,6 +1,36 @@
 // var popupS = require('popups');
 module.exports = function(app, fs, db,upload){
 
+  app.get('/apis/payment_invoices/:id', (req,res) => {
+    let id = req.params.id
+    let bill_month = req.query.month
+    let bill_year = req.query.year
+
+    console.log(req.query)
+
+    db.manyOrNone(`select tx.item_name,tx.bill_month, tx.bill_year, tx.filepath from tax_invoices as tx join (select items.id from items where payment_id = ${id}) as items on tx.tax_invoice_company_id = items.id where bill_month like '%${bill_month}%' and bill_year like '%${bill_year}%' and confirmed = true`)
+    .then(( data ) => {
+      res.send(data)
+    })
+    .catch((err) => {
+      res.send(err)
+    });
+ })
+  app.get('/apis/payment_maintains/:id', (req,res) => {
+    let id = req.params.id
+    let bill_month = req.query.month
+    let bill_year = req.query.year
+
+    console.log(req.query)
+
+    db.manyOrNone(`select tx.item_name,tx.month, tx.year, tx.filepath from maintain_reports as tx join (select items.id from items where payment_id = ${id}) as items on tx.tax_invoice_company_id = items.id where month like '%${bill_month}%' and year like '%${bill_year}%' and confirmed = true`)
+    .then(( data ) => {
+      res.send(data)
+    })
+    .catch((err) => {
+      res.send(err)
+    });
+ })
   app.get('/apis/company_names', (req,res) => {
     invoice_type = req.query.invoice_type
     company_id = req.query.company_id

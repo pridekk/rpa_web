@@ -200,6 +200,11 @@ module.exports = function(app, fs, db, upload){
   })
   app.get('/maintain_reports/new', (req,res) => {
     data = req.query
+    let d = new Date()
+    d.setMonth(d.getMonth()-1)
+    data.bill_month = d.getMonth() + 1
+    data.bill_year =  d.getFullYear()
+
     tax_invoice_company = null
     res.render('new_maintain_report', {title: '신규 업체 등록', data, tax_invoice_company })
 
@@ -209,9 +214,9 @@ module.exports = function(app, fs, db, upload){
       //console.log(req)
       let company = req.body;
       console.log(company)
-      query_string = `insert into maintain_reports (company_name, tax_invoice_company_id, item_name,year, month, filepath,sender, subject, confirmed ) Values (
+      query_string = `insert into maintain_reports (company_name, tax_invoice_company_id, item_name,year, month, filepath,sender,subject,confirmed ) Values (
          '${company.company_name}',${company.tax_invoice_company_id},'${company.item_name}','${company.bill_year}',
-         '${company.bill_month}','${req.file.filename}', '${company.sender}', '${company.subject}',`;
+         '${company.bill_month}','${req.file.filename}', '${company.sender}', '${company.subject}' ,`;
       if(company.confirmed === 'on'){
         query_string = query_string + "true)"
       }else {
@@ -220,9 +225,9 @@ module.exports = function(app, fs, db, upload){
       db.none(query_string).then( () => {
         console.log( "등록성공");
 
-        query_string = `select id from maintain_reports where company_name = '${company.company_name}' and item_name = '${company.item_name}' and year= '${company.bill_year}' and month = '${company.bill_month}'`
+        query_string = `select id from maintain_reports where company_name = '${company.company_name}' and item_name = '${company.item_name}' and year= '${company.bill_year}' and month = '${company.bill_month}' order by id desc limit 1`
         db.manyOrNone(query_string).then((data2) => {
-          res.redirect(`/monthly_reports?invoice_type=maintenance&year=${company.bill_year}&month=${company.bill_month}`)
+          res.redirect(`/maintain_report/${data2[0].id}`)
         }).catch((err) => {
           console.error( "등록실패:" ,err);
           res.send({result:err});

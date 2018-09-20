@@ -51,10 +51,7 @@
           <label>품의명</label>
           <input type="text" name="item_name" placeholder="품의명"  required>
         </div>
-
-      </div>
-      <div class="row">
-        <div class="col s12 l3">
+       <div class="col s12 l3">
           <label>결의주기</label>
           <select id="billing_cycle_select"  required>
             <option value='' disabled selected>Choose your option</option>
@@ -65,13 +62,19 @@
           </select>
           <input type="hidden" name="billing_cycle" id="billing_cycle" >
         </div>
-        <div class="col s12 l2">
+      </div>
+      <div class="row">
+     	<div class="col s12 l2">
           <label>결의코드</label>
           <input type="text" name="code"  value="<%=item.code%>" required>
         </div>
         <div class="col s12 l2">
           <label>부점코드</label>
           <input type="text" name="dept_code"  value="<%=item.dept_code%>" required>
+        </div>
+        <div class="col s12 l2">
+          <label>코드번호</label>
+          <input type="text" name="code" placeholder="코드번호" >
         </div>
         <div class="col s12 l2">
           <label>순서</label>
@@ -147,3 +150,4 @@
   </script>
 </body>
 </html>
+
